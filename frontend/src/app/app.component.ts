@@ -1,12 +1,94 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Tour } from './models/tour.model';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'frontend';
+
+  tours: Tour[] = [
+    {
+      id: 1,
+      name: 'Vienna City Tour',
+      description: 'A sightseeing tour through the city center of Vienna.',
+      from: 'Stephansplatz',
+      to: 'Schönbrunn Palace',
+      transportType: 'Walking',
+      distance: 6.5,
+      estimatedTime: '2h 15min',
+      imageUrl: 'https://via.placeholder.com/400x200?text=Vienna+City+Tour',
+      logs: [
+        {
+          id: 1,
+          dateTime: '2026-03-20T10:30',
+          comment: 'Very nice route with many interesting places.',
+          difficulty: 2,
+          totalDistance: 6.5,
+          totalTime: 135,
+          rating: 5
+        },
+        {
+          id: 2,
+          dateTime: '2026-03-21T14:00',
+          comment: 'Good route, but a bit crowded.',
+          difficulty: 3,
+          totalDistance: 6.5,
+          totalTime: 145,
+          rating: 4
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Danube Bike Ride',
+      description: 'A relaxing bike ride along the Danube.',
+      from: 'Donauinsel',
+      to: 'Klosterneuburg',
+      transportType: 'Bicycle',
+      distance: 14.2,
+      estimatedTime: '1h 20min',
+      imageUrl: 'https://via.placeholder.com/400x200?text=Danube+Bike+Ride',
+      logs: [
+        {
+          id: 1,
+          dateTime: '2026-03-18T09:15',
+          comment: 'Perfect weather and an easy ride.',
+          difficulty: 2,
+          totalDistance: 14.2,
+          totalTime: 80,
+          rating: 5
+        }
+      ]
+    },
+    {
+      id: 3,
+      name: 'Forest Hiking Trail',
+      description: 'A hiking route through a quiet forest area.',
+      from: 'Lainzer Tor',
+      to: 'Hubertuswarte',
+      transportType: 'Hiking',
+      distance: 9.8,
+      estimatedTime: '3h 00min',
+      imageUrl: 'https://via.placeholder.com/400x200?text=Forest+Hiking+Trail',
+      logs: [
+        {
+          id: 1,
+          dateTime: '2026-03-19T08:45',
+          comment: 'A beautiful and calm hiking experience.',
+          difficulty: 4,
+          totalDistance: 9.8,
+          totalTime: 180,
+          rating: 4
+        }
+      ]
+    }
+  ];
+
+  selectedTour: Tour | null = this.tours[0];
 }

@@ -1,2 +1,65 @@
-<h1>Tour Planner</h1>
-<p>Intermediate Project Setup läuft.</p>
+<header>
+  <h1>Tour Planner</h1>
+</header>
+
+<main class="layout">
+  <section class="left-panel">
+    <h2>Tours</h2>
+
+    <ul class="tour-list">
+      @for (tour of tours; track tour.id) {
+        <li
+          class="tour-item"
+          [class.selected]="selectedTour?.id === tour.id"
+        >
+          <button type="button" (click)="selectedTour = tour">
+            {{ tour.name }}
+          </button>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="right-panel">
+    @if (selectedTour) {
+      <h2>Tour Details</h2>
+
+      <div class="tour-details">
+        <img
+          [src]="selectedTour.imageUrl"
+          [alt]="selectedTour.name"
+          class="tour-image"
+        />
+
+        <p><strong>Name:</strong> {{ selectedTour.name }}</p>
+        <p><strong>Description:</strong> {{ selectedTour.description }}</p>
+        <p><strong>From:</strong> {{ selectedTour.from }}</p>
+        <p><strong>To:</strong> {{ selectedTour.to }}</p>
+        <p><strong>Transport Type:</strong> {{ selectedTour.transportType }}</p>
+        <p><strong>Distance:</strong> {{ selectedTour.distance }} km</p>
+        <p><strong>Estimated Time:</strong> {{ selectedTour.estimatedTime }}</p>
+
+        <div class="map-placeholder">
+          Map placeholder
+        </div>
+      </div>
+
+      <h3>Tour Logs</h3>
+
+      <ul class="log-list">
+        @for (log of selectedTour.logs; track log.id) {
+          <li class="log-item">
+            <p><strong>Date:</strong> {{ log.dateTime }}</p>
+            <p><strong>Comment:</strong> {{ log.comment }}</p>
+            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
+            <p><strong>Distance:</strong> {{ log.totalDistance }} km</p>
+            <p><strong>Time:</strong> {{ log.totalTime }} min</p>
+            <p><strong>Rating:</strong> {{ log.rating }}/5</p>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p>No tour selected.</p>
+    }
+  </section>
+</main>
