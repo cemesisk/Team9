@@ -3,10 +3,10 @@
 Wir haben den Screen "Tour-Details" für den TourPlanner entworfen.
 
 ### Variante A: Desktop (Fokus: Übersicht/Clarity)
-![Desktop Wireframe](pfad/zu/deinem/desktop_wireframe.png)
+![Desktop Wireframe](desktop.png)
 
 ### Variante B: Mobile (Fokus: Einhandbedienung/Speed)
-![Mobile Wireframe](pfad/zu/deinem/mobile_wireframe.png)
+![Mobile Wireframe](mobile.png)
 
 **Layout-Entscheidungen:**
 1. **Hierarchische Ansicht (Desktop):** Auf dem Desktop werden Tour-Beschreibung und Karte nebeneinander angezeigt, um den Platz für maximale Übersicht zu nutzen.
