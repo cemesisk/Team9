@@ -19,7 +19,6 @@ Wir haben den Screen "Tour-Details" für den TourPlanner entworfen.
 
 
 | Task ID | Task | Priorität | Status |
-| :--- | :--- | :--- | :--- | :--- |
 | **TP-101** | UI: Low-Fi Wireframes für Map-Ansicht erstellen | Hoch | Done |
 | **TP-102** | Tech: OpenRouteService API Integration | Hoch | In Progress |
 | **TP-103** | UI: Map-Komponente in React implementieren | Mittel | To Do |
