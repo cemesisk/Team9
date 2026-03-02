@@ -91,4 +91,41 @@ export class AppComponent {
   ];
 
   selectedTour: Tour | null = this.tours[0];
+
+  addTour(): void {
+    const newId =
+      this.tours.length > 0
+        ? Math.max(...this.tours.map(tour => tour.id)) + 1
+        : 1;
+
+    const newTour: Tour = {
+      id: newId,
+      name: `New Tour ${newId}`,
+      description: 'New tour description',
+      from: 'Start location',
+      to: 'Destination',
+      transportType: 'Walking',
+      distance: 0,
+      estimatedTime: '0h 00min',
+      imageUrl: 'https://via.placeholder.com/400x200?text=New+Tour',
+      logs: []
+    };
+
+    this.tours.push(newTour);
+    this.selectedTour = newTour;
+  }
+
+  deleteSelectedTour(): void {
+    if (!this.selectedTour) {
+      return;
+    }
+
+    this.tours = this.tours.filter(tour => tour.id !== this.selectedTour?.id);
+
+    if (this.tours.length > 0) {
+      this.selectedTour = this.tours[0];
+    } else {
+      this.selectedTour = null;
+    }
+  }
 }
