@@ -17,20 +17,15 @@ Wir haben den Screen "Tour-Details" für den TourPlanner entworfen.
 
 ## 3. Kanban-Board & Projektmanagement
 
-Das UI-Feature "Interaktive Karte" wird über unser GitHub Project Board gesteuert.
 
-| Task ID | Task | Priorität | Owner | Status |
+| Task ID | Task | Priorität | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **TP-101** | UI: Low-Fi Wireframes für Map-Ansicht erstellen | Hoch | Alex | Done |
-| **TP-102** | Tech: OpenRouteService API Integration | Hoch | Sam | In Progress |
-| **TP-103** | UI: Map-Komponente in React implementieren | Mittel | Jamie | To Do |
-| **TP-104** | UI: Responsives Layout für Mobile optimieren | Mittel | Alex | To Do |
-| **TP-105** | Test: Unit-Tests für Routen-Berechnung | Niedrig | Sam | To Do |
-| **TP-106** | Review: Code-Review der Map-Integration | Mittel | Jamie | To Do |
-
-**Beispiel-Task Detail (TP-103):**
-* **Bezug:** Siehe Wireframes in `design/wireframes_v1.png`.
-* **Acceptance Criterion:** Die Karte muss die Route basierend auf den GPS-Daten der `RouteData`-Klasse innerhalb von weniger als 2 Sekunden flüssig rendern.
+| **TP-101** | UI: Low-Fi Wireframes für Map-Ansicht erstellen | Hoch | Done |
+| **TP-102** | Tech: OpenRouteService API Integration | Hoch | In Progress |
+| **TP-103** | UI: Map-Komponente in React implementieren | Mittel | To Do |
+| **TP-104** | UI: Responsives Layout für Mobile optimieren | Mittel | To Do |
+| **TP-105** | Test: Unit-Tests für Routen-Berechnung | Niedrig | To Do |
+| **TP-106** | Review: Code-Review der Map-Integration | Mittel | To Do |
 
 
 # TourPlanner - Projekt Dokumentation
