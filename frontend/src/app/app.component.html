@@ -56,6 +56,50 @@
         </div>
       </div>
 
+      <div class="edit-form">
+        <h3>Edit Tour</h3>
+
+        <label>
+          Name
+          <input type="text" [(ngModel)]="selectedTour.name" />
+        </label>
+
+        <label>
+          Description
+          <textarea [(ngModel)]="selectedTour.description"></textarea>
+        </label>
+
+        <label>
+          From
+          <input type="text" [(ngModel)]="selectedTour.from" />
+        </label>
+
+        <label>
+          To
+          <input type="text" [(ngModel)]="selectedTour.to" />
+        </label>
+
+        <label>
+          Transport Type
+          <input type="text" [(ngModel)]="selectedTour.transportType" />
+        </label>
+
+        <label>
+          Distance
+          <input type="number" [(ngModel)]="selectedTour.distance" />
+        </label>
+
+        <label>
+          Estimated Time
+          <input type="text" [(ngModel)]="selectedTour.estimatedTime" />
+        </label>
+
+        <label>
+          Image URL
+          <input type="text" [(ngModel)]="selectedTour.imageUrl" />
+        </label>
+      </div>
+
       <h3>Tour Logs</h3>
 
       <ul class="log-list">

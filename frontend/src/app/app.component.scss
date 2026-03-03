@@ -136,3 +136,37 @@ header h1 {
     align-items: stretch;
   }
 }
+
+.edit-form {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.edit-form h3 {
+  margin-top: 0;
+}
+
+.edit-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.edit-form input,
+.edit-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.35rem;
+  padding: 0.65rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.edit-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
