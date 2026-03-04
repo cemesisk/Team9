@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Tour } from './models/tour.model';
+import { TourLog } from './models/tour-log.model';
 
 @Component({
   selector: 'app-root',
@@ -121,12 +122,47 @@ export class AppComponent {
       return;
     }
 
-    this.tours = this.tours.filter(tour => tour.id !== this.selectedTour?.id);
+    this.tours = this.tours.filter(tour => tour.id !== this.selectedTour!.id);
 
     if (this.tours.length > 0) {
       this.selectedTour = this.tours[0];
     } else {
       this.selectedTour = null;
     }
+  }
+
+  addLog(): void {
+    const selectedTour = this.selectedTour;
+
+    if (!selectedTour) {
+      return;
+    }
+
+    const newId =
+      selectedTour.logs.length > 0
+        ? Math.max(...selectedTour.logs.map(log => log.id)) + 1
+        : 1;
+
+    const newLog: TourLog = {
+      id: newId,
+      dateTime: '2026-03-04T12:00',
+      comment: 'New tour log',
+      difficulty: 1,
+      totalDistance: 0,
+      totalTime: 0,
+      rating: 1
+    };
+
+    selectedTour.logs.push(newLog);
+  }
+
+  deleteLog(logId: number): void {
+    const selectedTour = this.selectedTour;
+
+    if (!selectedTour) {
+      return;
+    }
+
+    selectedTour.logs = selectedTour.logs.filter(log => log.id !== logId);
   }
 }

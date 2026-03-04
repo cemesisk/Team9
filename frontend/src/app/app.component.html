@@ -100,11 +100,25 @@
         </label>
       </div>
 
-      <h3>Tour Logs</h3>
+      <div class="panel-header logs-header">
+        <h3>Tour Logs</h3>
+        <button type="button" class="action-button" (click)="addLog()">Add Log</button>
+      </div>
 
       <ul class="log-list">
         @for (log of selectedTour.logs; track log.id) {
           <li class="log-item">
+            <div class="log-header">
+              <h4>Log {{ log.id }}</h4>
+              <button
+                type="button"
+                class="delete-button small-button"
+                (click)="deleteLog(log.id)"
+              >
+                Delete
+              </button>
+            </div>
+
             <p><strong>Date:</strong> {{ log.dateTime }}</p>
             <p><strong>Comment:</strong> {{ log.comment }}</p>
             <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
