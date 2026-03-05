@@ -125,6 +125,40 @@
             <p><strong>Distance:</strong> {{ log.totalDistance }} km</p>
             <p><strong>Time:</strong> {{ log.totalTime }} min</p>
             <p><strong>Rating:</strong> {{ log.rating }}/5</p>
+
+            <div class="edit-form log-edit-form">
+              <h4>Edit Log</h4>
+
+              <label>
+                Date
+                <input type="datetime-local" [(ngModel)]="log.dateTime" />
+              </label>
+
+              <label>
+                Comment
+                <textarea [(ngModel)]="log.comment"></textarea>
+              </label>
+
+              <label>
+                Difficulty
+                <input type="number" [(ngModel)]="log.difficulty" />
+              </label>
+
+              <label>
+                Distance
+                <input type="number" [(ngModel)]="log.totalDistance" />
+              </label>
+
+              <label>
+                Time
+                <input type="number" [(ngModel)]="log.totalTime" />
+              </label>
+
+              <label>
+                Rating
+                <input type="number" [(ngModel)]="log.rating" />
+              </label>
+            </div>
           </li>
         }
       </ul>
