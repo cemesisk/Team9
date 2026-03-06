@@ -207,3 +207,15 @@ header h1 {
   margin-top: 0;
   margin-bottom: 1rem;
 }
+
+.invalid-input {
+  border: 2px solid #d92d20 !important;
+  background-color: #fff5f5;
+}
+
+.error-text {
+  margin-top: 0.35rem;
+  color: #d92d20;
+  font-size: 0.9rem;
+  font-weight: normal;
+}

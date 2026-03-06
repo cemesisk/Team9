@@ -165,4 +165,44 @@ export class AppComponent {
 
     selectedTour.logs = selectedTour.logs.filter(log => log.id !== logId);
   }
+
+  isTourNameInvalid(tour: Tour): boolean {
+    return tour.name.trim().length === 0;
+  }
+
+  isTourFromInvalid(tour: Tour): boolean {
+    return tour.from.trim().length === 0;
+  }
+
+  isTourToInvalid(tour: Tour): boolean {
+    return tour.to.trim().length === 0;
+  }
+
+  isTourDistanceInvalid(tour: Tour): boolean {
+    return tour.distance < 0;
+  }
+
+  isTourEstimatedTimeInvalid(tour: Tour): boolean {
+    return tour.estimatedTime.trim().length === 0;
+  }
+
+  isLogCommentInvalid(log: TourLog): boolean {
+    return log.comment.trim().length === 0;
+  }
+
+  isLogDifficultyInvalid(log: TourLog): boolean {
+    return log.difficulty < 0;
+  }
+
+  isLogDistanceInvalid(log: TourLog): boolean {
+    return log.totalDistance < 0;
+  }
+
+  isLogTimeInvalid(log: TourLog): boolean {
+    return log.totalTime < 0;
+  }
+
+  isLogRatingInvalid(log: TourLog): boolean {
+    return log.rating < 1 || log.rating > 5;
+  }
 }

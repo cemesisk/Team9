@@ -61,7 +61,14 @@
 
         <label>
           Name
-          <input type="text" [(ngModel)]="selectedTour.name" />
+          <input
+            type="text"
+            [(ngModel)]="selectedTour.name"
+            [class.invalid-input]="isTourNameInvalid(selectedTour)"
+          />
+          @if (isTourNameInvalid(selectedTour)) {
+            <div class="error-text">Name must not be empty.</div>
+          }
         </label>
 
         <label>
@@ -71,12 +78,26 @@
 
         <label>
           From
-          <input type="text" [(ngModel)]="selectedTour.from" />
+          <input
+            type="text"
+            [(ngModel)]="selectedTour.from"
+            [class.invalid-input]="isTourFromInvalid(selectedTour)"
+          />
+          @if (isTourFromInvalid(selectedTour)) {
+            <div class="error-text">Start location must not be empty.</div>
+          }
         </label>
 
         <label>
           To
-          <input type="text" [(ngModel)]="selectedTour.to" />
+          <input
+            type="text"
+            [(ngModel)]="selectedTour.to"
+            [class.invalid-input]="isTourToInvalid(selectedTour)"
+          />
+          @if (isTourToInvalid(selectedTour)) {
+            <div class="error-text">Destination must not be empty.</div>
+          }
         </label>
 
         <label>
@@ -86,12 +107,26 @@
 
         <label>
           Distance
-          <input type="number" [(ngModel)]="selectedTour.distance" />
+          <input
+            type="number"
+            [(ngModel)]="selectedTour.distance"
+            [class.invalid-input]="isTourDistanceInvalid(selectedTour)"
+          />
+          @if (isTourDistanceInvalid(selectedTour)) {
+            <div class="error-text">Distance must be 0 or greater.</div>
+          }
         </label>
 
         <label>
           Estimated Time
-          <input type="text" [(ngModel)]="selectedTour.estimatedTime" />
+          <input
+            type="text"
+            [(ngModel)]="selectedTour.estimatedTime"
+            [class.invalid-input]="isTourEstimatedTimeInvalid(selectedTour)"
+          />
+          @if (isTourEstimatedTimeInvalid(selectedTour)) {
+            <div class="error-text">Estimated time must not be empty.</div>
+          }
         </label>
 
         <label>
@@ -136,27 +171,61 @@
 
               <label>
                 Comment
-                <textarea [(ngModel)]="log.comment"></textarea>
+                <textarea
+                  [(ngModel)]="log.comment"
+                  [class.invalid-input]="isLogCommentInvalid(log)"
+                ></textarea>
+                @if (isLogCommentInvalid(log)) {
+                  <div class="error-text">Comment must not be empty.</div>
+                }
               </label>
 
               <label>
                 Difficulty
-                <input type="number" [(ngModel)]="log.difficulty" />
+                <input
+                  type="number"
+                  [(ngModel)]="log.difficulty"
+                  [class.invalid-input]="isLogDifficultyInvalid(log)"
+                />
+                @if (isLogDifficultyInvalid(log)) {
+                  <div class="error-text">Difficulty must be 0 or greater.</div>
+                }
               </label>
 
               <label>
                 Distance
-                <input type="number" [(ngModel)]="log.totalDistance" />
+                <input
+                  type="number"
+                  [(ngModel)]="log.totalDistance"
+                  [class.invalid-input]="isLogDistanceInvalid(log)"
+                />
+                @if (isLogDistanceInvalid(log)) {
+                  <div class="error-text">Distance must be 0 or greater.</div>
+                }
               </label>
 
               <label>
                 Time
-                <input type="number" [(ngModel)]="log.totalTime" />
+                <input
+                  type="number"
+                  [(ngModel)]="log.totalTime"
+                  [class.invalid-input]="isLogTimeInvalid(log)"
+                />
+                @if (isLogTimeInvalid(log)) {
+                  <div class="error-text">Time must be 0 or greater.</div>
+                }
               </label>
 
               <label>
                 Rating
-                <input type="number" [(ngModel)]="log.rating" />
+                <input
+                  type="number"
+                  [(ngModel)]="log.rating"
+                  [class.invalid-input]="isLogRatingInvalid(log)"
+                />
+                @if (isLogRatingInvalid(log)) {
+                  <div class="error-text">Rating must be between 1 and 5.</div>
+                }
               </label>
             </div>
           </li>
