@@ -142,93 +142,10 @@
 
       <ul class="log-list">
         @for (log of selectedTour.logs; track log.id) {
-          <li class="log-item">
-            <div class="log-header">
-              <h4>Log {{ log.id }}</h4>
-              <button
-                type="button"
-                class="delete-button small-button"
-                (click)="deleteLog(log.id)"
-              >
-                Delete
-              </button>
-            </div>
-
-            <p><strong>Date:</strong> {{ log.dateTime }}</p>
-            <p><strong>Comment:</strong> {{ log.comment }}</p>
-            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
-            <p><strong>Distance:</strong> {{ log.totalDistance }} km</p>
-            <p><strong>Time:</strong> {{ log.totalTime }} min</p>
-            <p><strong>Rating:</strong> {{ log.rating }}/5</p>
-
-            <div class="edit-form log-edit-form">
-              <h4>Edit Log</h4>
-
-              <label>
-                Date
-                <input type="datetime-local" [(ngModel)]="log.dateTime" />
-              </label>
-
-              <label>
-                Comment
-                <textarea
-                  [(ngModel)]="log.comment"
-                  [class.invalid-input]="isLogCommentInvalid(log)"
-                ></textarea>
-                @if (isLogCommentInvalid(log)) {
-                  <div class="error-text">Comment must not be empty.</div>
-                }
-              </label>
-
-              <label>
-                Difficulty
-                <input
-                  type="number"
-                  [(ngModel)]="log.difficulty"
-                  [class.invalid-input]="isLogDifficultyInvalid(log)"
-                />
-                @if (isLogDifficultyInvalid(log)) {
-                  <div class="error-text">Difficulty must be 0 or greater.</div>
-                }
-              </label>
-
-              <label>
-                Distance
-                <input
-                  type="number"
-                  [(ngModel)]="log.totalDistance"
-                  [class.invalid-input]="isLogDistanceInvalid(log)"
-                />
-                @if (isLogDistanceInvalid(log)) {
-                  <div class="error-text">Distance must be 0 or greater.</div>
-                }
-              </label>
-
-              <label>
-                Time
-                <input
-                  type="number"
-                  [(ngModel)]="log.totalTime"
-                  [class.invalid-input]="isLogTimeInvalid(log)"
-                />
-                @if (isLogTimeInvalid(log)) {
-                  <div class="error-text">Time must be 0 or greater.</div>
-                }
-              </label>
-
-              <label>
-                Rating
-                <input
-                  type="number"
-                  [(ngModel)]="log.rating"
-                  [class.invalid-input]="isLogRatingInvalid(log)"
-                />
-                @if (isLogRatingInvalid(log)) {
-                  <div class="error-text">Rating must be between 1 and 5.</div>
-                }
-              </label>
-            </div>
-          </li>
+          <app-tour-log-card
+            [log]="log"
+            (deleteRequested)="deleteLog($event)"
+          ></app-tour-log-card>
         }
       </ul>
     } @else {

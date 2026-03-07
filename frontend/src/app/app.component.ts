@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Tour } from './models/tour.model';
 import { TourLog } from './models/tour-log.model';
+import { TourLogCardComponent } from './components/tour-log-card/tour-log-card.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule],
+  imports: [RouterOutlet, FormsModule, TourLogCardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -184,25 +185,5 @@ export class AppComponent {
 
   isTourEstimatedTimeInvalid(tour: Tour): boolean {
     return tour.estimatedTime.trim().length === 0;
-  }
-
-  isLogCommentInvalid(log: TourLog): boolean {
-    return log.comment.trim().length === 0;
-  }
-
-  isLogDifficultyInvalid(log: TourLog): boolean {
-    return log.difficulty < 0;
-  }
-
-  isLogDistanceInvalid(log: TourLog): boolean {
-    return log.totalDistance < 0;
-  }
-
-  isLogTimeInvalid(log: TourLog): boolean {
-    return log.totalTime < 0;
-  }
-
-  isLogRatingInvalid(log: TourLog): boolean {
-    return log.rating < 1 || log.rating > 5;
   }
 }
