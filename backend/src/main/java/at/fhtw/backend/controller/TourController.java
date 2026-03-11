@@ -1,6 +1,7 @@
 package at.fhtw.backend.controller;
 
 import at.fhtw.backend.model.Tour;
+import at.fhtw.backend.model.TourLog;
 import at.fhtw.backend.service.TourService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,17 @@ public class TourController {
         return ResponseEntity.ok(createdTour);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Tour> updateTour(@PathVariable Long id, @RequestBody Tour updatedTour) {
+        Tour tour = tourService.updateTour(id, updatedTour);
+
+        if (tour == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(tour);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
         boolean deleted = tourService.deleteTour(id);
@@ -48,5 +60,27 @@ public class TourController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{tourId}/logs")
+    public ResponseEntity<List<TourLog>> getLogsByTourId(@PathVariable Long tourId) {
+        List<TourLog> logs = tourService.getLogsByTourId(tourId);
+
+        if (logs == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(logs);
+    }
+
+    @PostMapping("/{tourId}/logs")
+    public ResponseEntity<TourLog> addLogToTour(@PathVariable Long tourId, @RequestBody TourLog log) {
+        TourLog createdLog = tourService.addLogToTour(tourId, log);
+
+        if (createdLog == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(createdLog);
     }
 }
