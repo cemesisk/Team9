@@ -1,109 +1,60 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { Tour } from './models/tour.model';
 import { TourLog } from './models/tour-log.model';
 import { TourLogCardComponent } from './components/tour-log-card/tour-log-card.component';
+import { TourService } from './tour.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, TourLogCardComponent],
+  imports: [FormsModule, TourLogCardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend';
 
-  tours: Tour[] = [
-    {
-      id: 1,
-      name: 'Vienna City Tour',
-      description: 'A sightseeing tour through the city center of Vienna.',
-      from: 'Stephansplatz',
-      to: 'Schönbrunn Palace',
-      transportType: 'Walking',
-      distance: 6.5,
-      estimatedTime: '2h 15min',
-      imageUrl: 'https://via.placeholder.com/400x200?text=Vienna+City+Tour',
-      logs: [
-        {
-          id: 1,
-          dateTime: '2026-03-20T10:30',
-          comment: 'Very nice route with many interesting places.',
-          difficulty: 2,
-          totalDistance: 6.5,
-          totalTime: 135,
-          rating: 5
-        },
-        {
-          id: 2,
-          dateTime: '2026-03-21T14:00',
-          comment: 'Good route, but a bit crowded.',
-          difficulty: 3,
-          totalDistance: 6.5,
-          totalTime: 145,
-          rating: 4
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Danube Bike Ride',
-      description: 'A relaxing bike ride along the Danube.',
-      from: 'Donauinsel',
-      to: 'Klosterneuburg',
-      transportType: 'Bicycle',
-      distance: 14.2,
-      estimatedTime: '1h 20min',
-      imageUrl: 'https://via.placeholder.com/400x200?text=Danube+Bike+Ride',
-      logs: [
-        {
-          id: 1,
-          dateTime: '2026-03-18T09:15',
-          comment: 'Perfect weather and an easy ride.',
-          difficulty: 2,
-          totalDistance: 14.2,
-          totalTime: 80,
-          rating: 5
-        }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Forest Hiking Trail',
-      description: 'A hiking route through a quiet forest area.',
-      from: 'Lainzer Tor',
-      to: 'Hubertuswarte',
-      transportType: 'Hiking',
-      distance: 9.8,
-      estimatedTime: '3h 00min',
-      imageUrl: 'https://via.placeholder.com/400x200?text=Forest+Hiking+Trail',
-      logs: [
-        {
-          id: 1,
-          dateTime: '2026-03-19T08:45',
-          comment: 'A beautiful and calm hiking experience.',
-          difficulty: 4,
-          totalDistance: 9.8,
-          totalTime: 180,
-          rating: 4
-        }
-      ]
-    }
-  ];
+  tours: Tour[] = [];
+  selectedTour: Tour | null = null;
 
-  selectedTour: Tour | null = this.tours[0];
+  constructor(private tourService: TourService) {}
+
+  ngOnInit(): void {
+    this.loadTours();
+  }
+
+  loadTours(): void {
+    this.tourService.getTours().subscribe({
+      next: (tours) => {
+        this.tours = tours;
+
+        if (this.tours.length === 0) {
+          this.selectedTour = null;
+          return;
+        }
+
+        if (!this.selectedTour) {
+          this.selectedTour = this.tours[0];
+          return;
+        }
+
+        const updatedSelectedTour = this.tours.find(
+          tour => tour.id === this.selectedTour?.id
+        );
+
+        this.selectedTour = updatedSelectedTour ?? this.tours[0];
+      },
+      error: (error) => {
+        console.error('Error loading tours:', error);
+      }
+    });
+  }
 
   addTour(): void {
-    const newId =
-      this.tours.length > 0
-        ? Math.max(...this.tours.map(tour => tour.id)) + 1
-        : 1;
-
     const newTour: Tour = {
-      id: newId,
-      name: `New Tour ${newId}`,
+      name: `New Tour ${this.tours.length + 1}`,
       description: 'New tour description',
       from: 'Start location',
       to: 'Destination',
@@ -114,38 +65,43 @@ export class AppComponent {
       logs: []
     };
 
-    this.tours.push(newTour);
-    this.selectedTour = newTour;
+    this.tourService.createTour(newTour).subscribe({
+      next: (createdTour) => {
+        this.loadTours();
+        this.selectedTour = createdTour;
+      },
+      error: (error) => {
+        console.error('Error creating tour:', error);
+      }
+    });
   }
 
   deleteSelectedTour(): void {
-    if (!this.selectedTour) {
+    if (!this.selectedTour || this.selectedTour.id === undefined) {
       return;
     }
 
-    this.tours = this.tours.filter(tour => tour.id !== this.selectedTour!.id);
+    const deletedTourId = this.selectedTour.id;
 
-    if (this.tours.length > 0) {
-      this.selectedTour = this.tours[0];
-    } else {
-      this.selectedTour = null;
-    }
+    this.tourService.deleteTour(deletedTourId).subscribe({
+      next: () => {
+        this.selectedTour = null;
+        this.loadTours();
+      },
+      error: (error) => {
+        console.error('Error deleting tour:', error);
+      }
+    });
   }
 
   addLog(): void {
     const selectedTour = this.selectedTour;
 
-    if (!selectedTour) {
+    if (!selectedTour || selectedTour.id === undefined) {
       return;
     }
 
-    const newId =
-      selectedTour.logs.length > 0
-        ? Math.max(...selectedTour.logs.map(log => log.id)) + 1
-        : 1;
-
     const newLog: TourLog = {
-      id: newId,
       dateTime: '2026-03-04T12:00',
       comment: 'New tour log',
       difficulty: 1,
@@ -154,17 +110,29 @@ export class AppComponent {
       rating: 1
     };
 
-    selectedTour.logs.push(newLog);
+    this.tourService.addLogToTour(selectedTour.id, newLog).subscribe({
+      next: () => {
+        this.loadTours();
+      },
+      error: (error) => {
+        console.error('Error creating log:', error);
+      }
+    });
   }
 
   deleteLog(logId: number): void {
-    const selectedTour = this.selectedTour;
-
-    if (!selectedTour) {
+    if (!this.selectedTour) {
       return;
     }
 
-    selectedTour.logs = selectedTour.logs.filter(log => log.id !== logId);
+    this.tourService.deleteLog(logId).subscribe({
+      next: () => {
+        this.loadTours();
+      },
+      error: (error) => {
+        console.error('Error deleting log:', error);
+      }
+    });
   }
 
   isTourNameInvalid(tour: Tour): boolean {

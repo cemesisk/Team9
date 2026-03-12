@@ -1,7 +1,7 @@
 import { TourLog } from './tour-log.model';
 
 export interface Tour {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   from: string;

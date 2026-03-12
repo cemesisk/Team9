@@ -1,5 +1,5 @@
 export interface TourLog {
-  id: number;
+  id?: number;
   dateTime: string;
   comment: string;
   difficulty: number;
