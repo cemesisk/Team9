@@ -94,6 +94,31 @@ export class AppComponent implements OnInit {
     });
   }
 
+  saveTour(): void {
+    if (!this.selectedTour || this.selectedTour.id === undefined) {
+      return;
+    }
+
+    if (
+      this.isTourNameInvalid(this.selectedTour) ||
+      this.isTourFromInvalid(this.selectedTour) ||
+      this.isTourToInvalid(this.selectedTour) ||
+      this.isTourDistanceInvalid(this.selectedTour) ||
+      this.isTourEstimatedTimeInvalid(this.selectedTour)
+    ) {
+      return;
+    }
+
+    this.tourService.updateTour(this.selectedTour.id, this.selectedTour).subscribe({
+      next: () => {
+        this.loadTours();
+      },
+      error: (error) => {
+        console.error('Error updating tour:', error);
+      }
+    });
+  }
+
   addLog(): void {
     const selectedTour = this.selectedTour;
 

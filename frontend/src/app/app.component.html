@@ -11,145 +11,153 @@
 
     <ul class="tour-list">
       @for (tour of tours; track tour.id) {
-        <li
-          class="tour-item"
-          [class.selected]="selectedTour?.id === tour.id"
-        >
-          <button type="button" (click)="selectedTour = tour">
-            {{ tour.name }}
-          </button>
-        </li>
+      <li
+        class="tour-item"
+        [class.selected]="selectedTour?.id === tour.id"
+      >
+        <button type="button" (click)="selectedTour = tour">
+          {{ tour.name }}
+        </button>
+      </li>
       }
     </ul>
   </section>
 
   <section class="right-panel">
     @if (selectedTour) {
-      <div class="panel-header">
-        <h2>Tour Details</h2>
-        <button
-          type="button"
-          class="delete-button"
-          (click)="deleteSelectedTour()"
-        >
-          Delete Selected Tour
-        </button>
-      </div>
+    <div class="panel-header">
+      <h2>Tour Details</h2>
+      <button
+        type="button"
+        class="delete-button"
+        (click)="deleteSelectedTour()"
+      >
+        Delete Selected Tour
+      </button>
+    </div>
 
-      <div class="tour-details">
-        <img
-          [src]="selectedTour.imageUrl"
-          [alt]="selectedTour.name"
-          class="tour-image"
+    <div class="tour-details">
+      <img
+        [src]="selectedTour.imageUrl"
+        [alt]="selectedTour.name"
+        class="tour-image"
+      />
+
+      <p><strong>Name:</strong> {{ selectedTour.name }}</p>
+      <p><strong>Description:</strong> {{ selectedTour.description }}</p>
+      <p><strong>From:</strong> {{ selectedTour.from }}</p>
+      <p><strong>To:</strong> {{ selectedTour.to }}</p>
+      <p><strong>Transport Type:</strong> {{ selectedTour.transportType }}</p>
+      <p><strong>Distance:</strong> {{ selectedTour.distance }} km</p>
+      <p><strong>Estimated Time:</strong> {{ selectedTour.estimatedTime }}</p>
+
+      <div class="map-placeholder">
+        Map placeholder
+      </div>
+    </div>
+
+    <div class="edit-form">
+      <h3>Edit Tour</h3>
+
+      <label>
+        Name
+        <input
+          type="text"
+          [(ngModel)]="selectedTour.name"
+          [class.invalid-input]="isTourNameInvalid(selectedTour)"
         />
-
-        <p><strong>Name:</strong> {{ selectedTour.name }}</p>
-        <p><strong>Description:</strong> {{ selectedTour.description }}</p>
-        <p><strong>From:</strong> {{ selectedTour.from }}</p>
-        <p><strong>To:</strong> {{ selectedTour.to }}</p>
-        <p><strong>Transport Type:</strong> {{ selectedTour.transportType }}</p>
-        <p><strong>Distance:</strong> {{ selectedTour.distance }} km</p>
-        <p><strong>Estimated Time:</strong> {{ selectedTour.estimatedTime }}</p>
-
-        <div class="map-placeholder">
-          Map placeholder
-        </div>
-      </div>
-
-      <div class="edit-form">
-        <h3>Edit Tour</h3>
-
-        <label>
-          Name
-          <input
-            type="text"
-            [(ngModel)]="selectedTour.name"
-            [class.invalid-input]="isTourNameInvalid(selectedTour)"
-          />
-          @if (isTourNameInvalid(selectedTour)) {
-            <div class="error-text">Name must not be empty.</div>
-          }
-        </label>
-
-        <label>
-          Description
-          <textarea [(ngModel)]="selectedTour.description"></textarea>
-        </label>
-
-        <label>
-          From
-          <input
-            type="text"
-            [(ngModel)]="selectedTour.from"
-            [class.invalid-input]="isTourFromInvalid(selectedTour)"
-          />
-          @if (isTourFromInvalid(selectedTour)) {
-            <div class="error-text">Start location must not be empty.</div>
-          }
-        </label>
-
-        <label>
-          To
-          <input
-            type="text"
-            [(ngModel)]="selectedTour.to"
-            [class.invalid-input]="isTourToInvalid(selectedTour)"
-          />
-          @if (isTourToInvalid(selectedTour)) {
-            <div class="error-text">Destination must not be empty.</div>
-          }
-        </label>
-
-        <label>
-          Transport Type
-          <input type="text" [(ngModel)]="selectedTour.transportType" />
-        </label>
-
-        <label>
-          Distance
-          <input
-            type="number"
-            [(ngModel)]="selectedTour.distance"
-            [class.invalid-input]="isTourDistanceInvalid(selectedTour)"
-          />
-          @if (isTourDistanceInvalid(selectedTour)) {
-            <div class="error-text">Distance must be 0 or greater.</div>
-          }
-        </label>
-
-        <label>
-          Estimated Time
-          <input
-            type="text"
-            [(ngModel)]="selectedTour.estimatedTime"
-            [class.invalid-input]="isTourEstimatedTimeInvalid(selectedTour)"
-          />
-          @if (isTourEstimatedTimeInvalid(selectedTour)) {
-            <div class="error-text">Estimated time must not be empty.</div>
-          }
-        </label>
-
-        <label>
-          Image URL
-          <input type="text" [(ngModel)]="selectedTour.imageUrl" />
-        </label>
-      </div>
-
-      <div class="panel-header logs-header">
-        <h3>Tour Logs</h3>
-        <button type="button" class="action-button" (click)="addLog()">Add Log</button>
-      </div>
-
-      <ul class="log-list">
-        @for (log of selectedTour.logs; track log.id) {
-          <app-tour-log-card
-            [log]="log"
-            (deleteRequested)="deleteLog($event)"
-          ></app-tour-log-card>
+        @if (isTourNameInvalid(selectedTour)) {
+        <div class="error-text">Name must not be empty.</div>
         }
-      </ul>
+      </label>
+
+      <label>
+        Description
+        <textarea [(ngModel)]="selectedTour.description"></textarea>
+      </label>
+
+      <label>
+        From
+        <input
+          type="text"
+          [(ngModel)]="selectedTour.from"
+          [class.invalid-input]="isTourFromInvalid(selectedTour)"
+        />
+        @if (isTourFromInvalid(selectedTour)) {
+        <div class="error-text">Start location must not be empty.</div>
+        }
+      </label>
+
+      <label>
+        To
+        <input
+          type="text"
+          [(ngModel)]="selectedTour.to"
+          [class.invalid-input]="isTourToInvalid(selectedTour)"
+        />
+        @if (isTourToInvalid(selectedTour)) {
+        <div class="error-text">Destination must not be empty.</div>
+        }
+      </label>
+
+      <label>
+        Transport Type
+        <input type="text" [(ngModel)]="selectedTour.transportType" />
+      </label>
+
+      <label>
+        Distance
+        <input
+          type="number"
+          [(ngModel)]="selectedTour.distance"
+          [class.invalid-input]="isTourDistanceInvalid(selectedTour)"
+        />
+        @if (isTourDistanceInvalid(selectedTour)) {
+        <div class="error-text">Distance must be 0 or greater.</div>
+        }
+      </label>
+
+      <label>
+        Estimated Time
+        <input
+          type="text"
+          [(ngModel)]="selectedTour.estimatedTime"
+          [class.invalid-input]="isTourEstimatedTimeInvalid(selectedTour)"
+        />
+        @if (isTourEstimatedTimeInvalid(selectedTour)) {
+        <div class="error-text">Estimated time must not be empty.</div>
+        }
+      </label>
+
+      <label>
+        Image URL
+        <input type="text" [(ngModel)]="selectedTour.imageUrl" />
+      </label>
+
+      <button
+        type="button"
+        class="action-button"
+        (click)="saveTour()"
+      >
+        Save Changes
+      </button>
+    </div>
+
+    <div class="panel-header logs-header">
+      <h3>Tour Logs</h3>
+      <button type="button" class="action-button" (click)="addLog()">Add Log</button>
+    </div>
+
+    <ul class="log-list">
+      @for (log of selectedTour.logs; track log.id) {
+      <app-tour-log-card
+        [log]="log"
+        (deleteRequested)="deleteLog($event)"
+      ></app-tour-log-card>
+      }
+    </ul>
     } @else {
-      <p>No tour selected.</p>
+    <p>No tour selected.</p>
     }
   </section>
 </main>
