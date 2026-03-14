@@ -145,6 +145,31 @@ export class AppComponent implements OnInit {
     });
   }
 
+  saveLog(log: TourLog): void {
+    if (!this.selectedTour || log.id === undefined) {
+      return;
+    }
+
+    if (
+      this.isLogCommentInvalid(log) ||
+      this.isLogDifficultyInvalid(log) ||
+      this.isLogDistanceInvalid(log) ||
+      this.isLogTimeInvalid(log) ||
+      this.isLogRatingInvalid(log)
+    ) {
+      return;
+    }
+
+    this.tourService.updateLog(log.id, log).subscribe({
+      next: () => {
+        this.loadTours();
+      },
+      error: (error) => {
+        console.error('Error updating log:', error);
+      }
+    });
+  }
+
   deleteLog(logId: number): void {
     if (!this.selectedTour) {
       return;
@@ -178,5 +203,25 @@ export class AppComponent implements OnInit {
 
   isTourEstimatedTimeInvalid(tour: Tour): boolean {
     return tour.estimatedTime.trim().length === 0;
+  }
+
+  isLogCommentInvalid(log: TourLog): boolean {
+    return log.comment.trim().length === 0;
+  }
+
+  isLogDifficultyInvalid(log: TourLog): boolean {
+    return log.difficulty < 0;
+  }
+
+  isLogDistanceInvalid(log: TourLog): boolean {
+    return log.totalDistance < 0;
+  }
+
+  isLogTimeInvalid(log: TourLog): boolean {
+    return log.totalTime < 0;
+  }
+
+  isLogRatingInvalid(log: TourLog): boolean {
+    return log.rating < 1 || log.rating > 5;
   }
 }

@@ -92,6 +92,15 @@ import { TourLog } from '../../models/tour-log.model';
             <div class="error-text">Rating must be between 1 and 5.</div>
           }
         </label>
+
+        <button
+          type="button"
+          class="save-button small-button"
+          (click)="saveRequested.emit(log)"
+          [disabled]="isFormInvalid"
+        >
+          Save Changes
+        </button>
       </div>
     </li>
   `,
@@ -162,19 +171,28 @@ import { TourLog } from '../../models/tour-log.model';
     .small-button {
       padding: 0.45rem 0.75rem;
       font-size: 0.9rem;
-    }
-
-    .delete-button {
       border: none;
       border-radius: 6px;
-      background-color: #b42318;
       color: white;
       cursor: pointer;
       font-weight: bold;
     }
 
-    .delete-button:hover {
+    .delete-button {
+      background-color: #b42318;
+    }
+
+    .save-button {
+      background-color: #175cd3;
+    }
+
+    .small-button:hover:not(:disabled) {
       opacity: 0.9;
+    }
+
+    .small-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .invalid-input {
@@ -200,6 +218,7 @@ import { TourLog } from '../../models/tour-log.model';
 export class TourLogCardComponent {
   @Input({ required: true }) log!: TourLog;
   @Output() deleteRequested = new EventEmitter<number>();
+  @Output() saveRequested = new EventEmitter<TourLog>();
 
   get isCommentInvalid(): boolean {
     return this.log.comment.trim().length === 0;
@@ -219,5 +238,15 @@ export class TourLogCardComponent {
 
   get isRatingInvalid(): boolean {
     return this.log.rating < 1 || this.log.rating > 5;
+  }
+
+  get isFormInvalid(): boolean {
+    return (
+      this.isCommentInvalid ||
+      this.isDifficultyInvalid ||
+      this.isDistanceInvalid ||
+      this.isTimeInvalid ||
+      this.isRatingInvalid
+    );
   }
 }
