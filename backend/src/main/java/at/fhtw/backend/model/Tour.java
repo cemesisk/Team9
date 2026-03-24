@@ -1,5 +1,7 @@
 package at.fhtw.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class Tour {
     private double estimatedTime;
     private String imageUrl;
     private List<TourLog> logs;
+    @JsonIgnore
+    private String ownerUsername;
 
     public Tour() {
         this.logs = new ArrayList<>();
@@ -74,6 +78,10 @@ public class Tour {
         return logs;
     }
 
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -112,5 +120,9 @@ public class Tour {
 
     public void setLogs(List<TourLog> logs) {
         this.logs = logs;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
     }
 }

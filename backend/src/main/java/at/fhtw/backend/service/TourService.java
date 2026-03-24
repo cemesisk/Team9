@@ -2,81 +2,45 @@ package at.fhtw.backend.service;
 
 import at.fhtw.backend.model.Tour;
 import at.fhtw.backend.model.TourLog;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class TourService {
 
-    private final List<Tour> tours = new ArrayList<>();
+    private final Map<String, List<Tour>> toursByUser = new ConcurrentHashMap<>();
     private Long nextTourId = 1L;
     private Long nextLogId = 1L;
 
-    @PostConstruct
-    public void initSampleData() {
-        Tour tour1 = new Tour(
-                nextTourId++,
-                "Vienna City Tour",
-                "A walk through the city center of Vienna.",
-                "Stephansplatz",
-                "Schönbrunn",
-                "Walking",
-                6.5,
-                2.0,
-                "https://example.com/vienna.jpg"
-        );
-
-        tour1.getLogs().add(new TourLog(
-                nextLogId++,
-                "2026-03-01",
-                "Nice weather and easy route.",
-                "Easy",
-                6.5,
-                2.1,
-                5
-        ));
-
-        Tour tour2 = new Tour(
-                nextTourId++,
-                "Danube Bike Ride",
-                "Cycling tour along the Danube.",
-                "Donauinsel",
-                "Klosterneuburg",
-                "Bicycle",
-                18.0,
-                1.5,
-                "https://example.com/danube.jpg"
-        );
-
-        tours.add(tour1);
-        tours.add(tour2);
+    public synchronized List<Tour> getAllTours(String username) {
+        return Collections.unmodifiableList(new ArrayList<>(getOrCreateToursForUser(username)));
     }
 
-    public List<Tour> getAllTours() {
-        return tours;
-    }
-
-    public Tour getTourById(Long id) {
-        return tours.stream()
+    public synchronized Tour getTourById(String username, Long id) {
+        return getOrCreateToursForUser(username).stream()
                 .filter(tour -> tour.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public Tour createTour(Tour tour) {
+    public synchronized Tour createTour(String username, Tour tour) {
+        String normalizedUsername = normalizeUsername(username);
         tour.setId(nextTourId++);
-        if (tour.getLogs() == null) {
-            tour.setLogs(new ArrayList<>());
-        }
-        tours.add(tour);
+        tour.setOwnerUsername(normalizedUsername);
+        // Ignore client-provided logs on create to prevent accidental cross-entity state import.
+        tour.setLogs(new ArrayList<>());
+        getOrCreateToursForUser(normalizedUsername).add(tour);
         return tour;
     }
 
-    public Tour updateTour(Long id, Tour updatedTour) {
-        Tour existingTour = getTourById(id);
+    public synchronized Tour updateTour(String username, Long id, Tour updatedTour) {
+        Tour existingTour = getTourById(username, id);
 
         if (existingTour == null) {
             return null;
@@ -94,12 +58,12 @@ public class TourService {
         return existingTour;
     }
 
-    public boolean deleteTour(Long id) {
-        return tours.removeIf(tour -> tour.getId().equals(id));
+    public synchronized boolean deleteTour(String username, Long id) {
+        return getOrCreateToursForUser(username).removeIf(tour -> tour.getId().equals(id));
     }
 
-    public List<TourLog> getLogsByTourId(Long tourId) {
-        Tour tour = getTourById(tourId);
+    public synchronized List<TourLog> getLogsByTourId(String username, Long tourId) {
+        Tour tour = getTourById(username, tourId);
 
         if (tour == null) {
             return null;
@@ -108,8 +72,8 @@ public class TourService {
         return tour.getLogs();
     }
 
-    public TourLog addLogToTour(Long tourId, TourLog log) {
-        Tour tour = getTourById(tourId);
+    public synchronized TourLog addLogToTour(String username, Long tourId, TourLog log) {
+        Tour tour = getTourById(username, tourId);
 
         if (tour == null) {
             return null;
@@ -120,8 +84,8 @@ public class TourService {
         return log;
     }
 
-    public TourLog updateLog(Long logId, TourLog updatedLog) {
-        for (Tour tour : tours) {
+    public synchronized TourLog updateLog(String username, Long logId, TourLog updatedLog) {
+        for (Tour tour : getOrCreateToursForUser(username)) {
             for (TourLog log : tour.getLogs()) {
                 if (log.getId().equals(logId)) {
                     log.setDate(updatedLog.getDate());
@@ -138,8 +102,8 @@ public class TourService {
         return null;
     }
 
-    public boolean deleteLog(Long logId) {
-        for (Tour tour : tours) {
+    public synchronized boolean deleteLog(String username, Long logId) {
+        for (Tour tour : getOrCreateToursForUser(username)) {
             boolean removed = tour.getLogs().removeIf(log -> log.getId().equals(logId));
             if (removed) {
                 return true;
@@ -147,5 +111,16 @@ public class TourService {
         }
 
         return false;
+    }
+
+    private List<Tour> getOrCreateToursForUser(String username) {
+        return toursByUser.computeIfAbsent(normalizeUsername(username), key -> new ArrayList<>());
+    }
+
+    private String normalizeUsername(String username) {
+        if (username == null) {
+            return "";
+        }
+        return username.trim().toLowerCase(Locale.ROOT);
     }
 }

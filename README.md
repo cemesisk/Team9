@@ -126,3 +126,100 @@ ng serve
 ```
 
 App läuft unter **http://localhost:4200**
+
+# Tour Planner (Intermediate Hand-In)
+
+Repository: https://github.com/cemesisk/Team9.git
+
+## Ziel dieser Version
+
+Diese Version ist bewusst auf den **Intermediate Hand-In** fokussiert:
+
+- Angular Frontend
+- MVVM-orientierte UI-Struktur
+- Integration mit Spring Boot Backend (HTTP/JSON)
+- CRUD fuer Tours
+- CRUD fuer Tour Logs
+- Login und Registrierung (JWT-basiert)
+- Reusable UI-Komponente fuer Tour-Logs
+- Eingabevalidierung in der UI
+- Responsive Layout
+- Map-Placeholder in den Tour-Details
+
+## Intermediate Checklist Mapping
+
+### Must Haves
+- Uses Angular as frontend framework -> **erfuellt**
+- Uses MVVM for UI -> **erfuellt**
+
+### GUI in general
+- Correct data binding between UI elements and view model properties -> **erfuellt**
+- UI responds to window size changes -> **erfuellt**
+- Defines reusable UI component -> **erfuellt**
+
+### Tours
+- Create/modify/delete tour -> **erfuellt**
+- Tours have required attributes (incl. image) and are managed in a list view -> **erfuellt**
+- Tour details show all tour attributes of a selected tour and a map-placeholder -> **erfuellt**
+- Validates user-input (no crash on wrong input) -> **erfuellt**
+
+### Tour Logs
+- Create/modify/delete tour log -> **erfuellt**
+- Tour log has required attributes -> **erfuellt**
+- Tour logs showing all logs of a selected tour with all attributes in a list view -> **erfuellt**
+- Validates user-input (no crash on wrong input) -> **erfuellt**
+
+### Protocol
+- Describes UX (include wireframes) -> **als separates Abgabe-Artefakt beilegen**
+
+## Projektstruktur
+
+- `frontend/` Angular App
+- `backend/` Spring Boot REST API
+
+## API (Intermediate)
+
+### Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+### Tours
+- `GET /api/tours`
+- `POST /api/tours`
+- `PUT /api/tours/{id}`
+- `DELETE /api/tours/{id}`
+
+### Tour Logs
+- `POST /api/tours/{tourId}/logs`
+- `PUT /api/tour-logs/{logId}`
+- `DELETE /api/tour-logs/{logId}`
+
+## Starten
+
+### Backend
+Windows:
+```bash
+cd backend
+mvnw.cmd spring-boot:run
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Frontend: `http://localhost:4200`
+Backend: `http://localhost:8080`
+
+## Login/Register Flow
+
+- Beim Start erscheint eine Login/Register-Ansicht im Frontend.
+- Nach erfolgreicher Authentifizierung wird ein JWT gespeichert und automatisch bei API-Requests mitgesendet.
+- Tour- und Tour-Log-Endpunkte unter `/api/**` sind geschuetzt, `/api/auth/**` ist frei.
+
+## Hinweis
+
+Diese Readme beschreibt absichtlich nur den Intermediate-Scope.
+

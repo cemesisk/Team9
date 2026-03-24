@@ -43,12 +43,6 @@ export class TourService {
     );
   }
 
-  getTourById(id: number): Observable<Tour> {
-    return this.http.get<BackendTour>(`${this.baseUrl}/${id}`).pipe(
-      map(tour => this.mapBackendTourToFrontend(tour))
-    );
-  }
-
   createTour(tour: Tour): Observable<Tour> {
     const backendTour = this.mapFrontendTourToBackend(tour);
 
@@ -69,11 +63,6 @@ export class TourService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  getLogsByTourId(tourId: number): Observable<TourLog[]> {
-    return this.http.get<BackendTourLog[]>(`${this.baseUrl}/${tourId}/logs`).pipe(
-      map(logs => logs.map(log => this.mapBackendLogToFrontend(log)))
-    );
-  }
 
   addLogToTour(tourId: number, log: TourLog): Observable<TourLog> {
     const backendLog = this.mapFrontendLogToBackend(log);

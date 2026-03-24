@@ -1,13 +1,92 @@
 <header>
   <h1>Tour Planner</h1>
+
+  <div class="header-auth" *ngIf="isAuthenticated">
+    <span>Angemeldet als <strong>{{ currentUsername }}</strong></span>
+    <button type="button" class="secondary-button" (click)="logout()">Logout</button>
+  </div>
 </header>
 
-<main class="layout">
+<main class="auth-layout" *ngIf="!isAuthenticated">
+  <section class="auth-card">
+    <h2>{{ authMode === 'login' ? 'Login' : 'Register' }}</h2>
+
+    <div class="auth-tabs">
+      <button
+        type="button"
+        class="secondary-button"
+        [class.active-auth-tab]="authMode === 'login'"
+        (click)="switchAuthMode('login')"
+        [disabled]="isAuthenticating"
+      >
+        Login
+      </button>
+      <button
+        type="button"
+        class="secondary-button"
+        [class.active-auth-tab]="authMode === 'register'"
+        (click)="switchAuthMode('register')"
+        [disabled]="isAuthenticating"
+      >
+        Register
+      </button>
+    </div>
+
+    <div class="edit-form auth-form">
+      <label>
+        Username
+        <input type="text" [(ngModel)]="username" [disabled]="isAuthenticating" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" [(ngModel)]="password" [disabled]="isAuthenticating" />
+      </label>
+
+      <label *ngIf="authMode === 'register'">
+        Confirm Password
+        <input type="password" [(ngModel)]="confirmPassword" [disabled]="isAuthenticating" />
+      </label>
+    </div>
+
+    <div class="status-message error-message" *ngIf="authMessage">{{ authMessage }}</div>
+
+    <button
+      type="button"
+      class="action-button"
+      (click)="submitAuth()"
+      [disabled]="isAuthenticating"
+    >
+      {{ isAuthenticating ? 'Bitte warten...' : (authMode === 'login' ? 'Einloggen' : 'Registrieren') }}
+    </button>
+  </section>
+</main>
+
+<main class="layout" *ngIf="isAuthenticated">
   <section class="left-panel">
     <div class="panel-header">
       <h2>Tours</h2>
-      <button type="button" class="action-button" (click)="addTour()">Add Tour</button>
+      <button
+        type="button"
+        class="action-button"
+        (click)="addTour()"
+        [disabled]="isLoading"
+      >
+        Add Tour
+      </button>
     </div>
+
+    @if (errorMessage) {
+    <div class="status-message error-message">{{ errorMessage }}</div>
+    }
+
+    @if (successMessage) {
+    <div class="status-message success-message">{{ successMessage }}</div>
+    }
+
+    @if (isLoading) {
+    <p class="info-text">Loading...</p>
+    }
 
     <ul class="tour-list">
       @for (tour of tours; track tour.id) {
@@ -15,7 +94,7 @@
         class="tour-item"
         [class.selected]="selectedTour?.id === tour.id"
       >
-        <button type="button" (click)="selectedTour = tour">
+        <button type="button" (click)="selectTour(tour)">
           {{ tour.name }}
         </button>
       </li>
@@ -27,13 +106,6 @@
     @if (selectedTour) {
     <div class="panel-header">
       <h2>Tour Details</h2>
-      <button
-        type="button"
-        class="delete-button"
-        (click)="deleteSelectedTour()"
-      >
-        Delete Selected Tour
-      </button>
     </div>
 
     <div class="tour-details">
@@ -51,39 +123,93 @@
       <p><strong>Distance:</strong> {{ selectedTour.distance }} km</p>
       <p><strong>Estimated Time:</strong> {{ selectedTour.estimatedTime }}</p>
 
-      <div class="map-placeholder">
-        Map placeholder
-      </div>
+      <div id="tour-map" class="tour-map" aria-label="Tour map"></div>
+    </div>
+
+    <div class="tour-actions">
+      <button
+        type="button"
+        class="action-button"
+        (click)="openEditModal()"
+        [disabled]="isLoading"
+      >
+        Edit Selected Tour
+      </button>
+
+      <button
+        type="button"
+        class="delete-button"
+        (click)="deleteSelectedTour()"
+        [disabled]="isLoading"
+      >
+        Delete Selected Tour
+      </button>
+    </div>
+
+    <div class="panel-header logs-header">
+      <h3>Tour Logs</h3>
+      <button
+        type="button"
+        class="action-button"
+        (click)="addLog()"
+        [disabled]="isLoading"
+      >
+        Add Log
+      </button>
+    </div>
+
+    <ul class="log-list">
+      @for (log of selectedTour.logs; track log.id) {
+      <app-tour-log-card
+        [log]="log"
+        [isBusy]="isLoading"
+        (editRequested)="openLogEditModal($event)"
+        (deleteRequested)="deleteLog($event)"
+      ></app-tour-log-card>
+      }
+    </ul>
+    } @else {
+    <p class="info-text">No tour selected.</p>
+    }
+  </section>
+</main>
+
+@if (isEditModalOpen && editTourDraft) {
+<div class="modal-overlay" (click)="closeEditModal()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="panel-header">
+      <h3>Edit Tour</h3>
+      <button type="button" class="secondary-button" (click)="closeEditModal()" [disabled]="isLoading">
+        Close
+      </button>
     </div>
 
     <div class="edit-form">
-      <h3>Edit Tour</h3>
-
       <label>
         Name
         <input
           type="text"
-          [(ngModel)]="selectedTour.name"
-          [class.invalid-input]="isTourNameInvalid(selectedTour)"
+          [(ngModel)]="editTourDraft.name"
+          [class.invalid-input]="isTourNameInvalid(editTourDraft)"
         />
-        @if (isTourNameInvalid(selectedTour)) {
+        @if (isTourNameInvalid(editTourDraft)) {
         <div class="error-text">Name must not be empty.</div>
         }
       </label>
 
       <label>
         Description
-        <textarea [(ngModel)]="selectedTour.description"></textarea>
+        <textarea [(ngModel)]="editTourDraft.description"></textarea>
       </label>
 
       <label>
         From
         <input
           type="text"
-          [(ngModel)]="selectedTour.from"
-          [class.invalid-input]="isTourFromInvalid(selectedTour)"
+          [(ngModel)]="editTourDraft.from"
+          [class.invalid-input]="isTourFromInvalid(editTourDraft)"
         />
-        @if (isTourFromInvalid(selectedTour)) {
+        @if (isTourFromInvalid(editTourDraft)) {
         <div class="error-text">Start location must not be empty.</div>
         }
       </label>
@@ -92,27 +218,27 @@
         To
         <input
           type="text"
-          [(ngModel)]="selectedTour.to"
-          [class.invalid-input]="isTourToInvalid(selectedTour)"
+          [(ngModel)]="editTourDraft.to"
+          [class.invalid-input]="isTourToInvalid(editTourDraft)"
         />
-        @if (isTourToInvalid(selectedTour)) {
+        @if (isTourToInvalid(editTourDraft)) {
         <div class="error-text">Destination must not be empty.</div>
         }
       </label>
 
       <label>
         Transport Type
-        <input type="text" [(ngModel)]="selectedTour.transportType" />
+        <input type="text" [(ngModel)]="editTourDraft.transportType" />
       </label>
 
       <label>
         Distance
         <input
           type="number"
-          [(ngModel)]="selectedTour.distance"
-          [class.invalid-input]="isTourDistanceInvalid(selectedTour)"
+          [(ngModel)]="editTourDraft.distance"
+          [class.invalid-input]="isTourDistanceInvalid(editTourDraft)"
         />
-        @if (isTourDistanceInvalid(selectedTour)) {
+        @if (isTourDistanceInvalid(editTourDraft)) {
         <div class="error-text">Distance must be 0 or greater.</div>
         }
       </label>
@@ -121,44 +247,128 @@
         Estimated Time
         <input
           type="text"
-          [(ngModel)]="selectedTour.estimatedTime"
-          [class.invalid-input]="isTourEstimatedTimeInvalid(selectedTour)"
+          [(ngModel)]="editTourDraft.estimatedTime"
+          [class.invalid-input]="isTourEstimatedTimeInvalid(editTourDraft)"
         />
-        @if (isTourEstimatedTimeInvalid(selectedTour)) {
+        @if (isTourEstimatedTimeInvalid(editTourDraft)) {
         <div class="error-text">Estimated time must not be empty.</div>
         }
       </label>
 
       <label>
         Image URL
-        <input type="text" [(ngModel)]="selectedTour.imageUrl" />
+        <input type="text" [(ngModel)]="editTourDraft.imageUrl" />
       </label>
+    </div>
 
+    <div class="modal-actions">
+      <button type="button" class="secondary-button" (click)="closeEditModal()" [disabled]="isLoading">
+        Cancel
+      </button>
       <button
         type="button"
         class="action-button"
-        (click)="saveTour()"
+        (click)="saveEditedTour()"
+        [disabled]="!isEditTourDraftValid || isLoading"
       >
-        Save Changes
+        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+@if (isLogEditModalOpen && editLogDraft) {
+<div class="modal-overlay" (click)="closeLogEditModal()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="panel-header">
+      <h3>Edit Tour Log</h3>
+      <button type="button" class="secondary-button" (click)="closeLogEditModal()" [disabled]="isLoading">
+        Close
       </button>
     </div>
 
-    <div class="panel-header logs-header">
-      <h3>Tour Logs</h3>
-      <button type="button" class="action-button" (click)="addLog()">Add Log</button>
+    <div class="edit-form">
+      <label>
+        Date
+        <input type="datetime-local" [(ngModel)]="editLogDraft.dateTime" />
+      </label>
+
+      <label>
+        Comment
+        <textarea
+          [(ngModel)]="editLogDraft.comment"
+          [class.invalid-input]="isLogCommentInvalid(editLogDraft)"
+        ></textarea>
+        @if (isLogCommentInvalid(editLogDraft)) {
+        <div class="error-text">Comment must not be empty.</div>
+        }
+      </label>
+
+      <label>
+        Difficulty
+        <input
+          type="number"
+          [(ngModel)]="editLogDraft.difficulty"
+          [class.invalid-input]="isLogDifficultyInvalid(editLogDraft)"
+        />
+        @if (isLogDifficultyInvalid(editLogDraft)) {
+        <div class="error-text">Difficulty must be 0 or greater.</div>
+        }
+      </label>
+
+      <label>
+        Distance
+        <input
+          type="number"
+          [(ngModel)]="editLogDraft.totalDistance"
+          [class.invalid-input]="isLogDistanceInvalid(editLogDraft)"
+        />
+        @if (isLogDistanceInvalid(editLogDraft)) {
+        <div class="error-text">Distance must be 0 or greater.</div>
+        }
+      </label>
+
+      <label>
+        Time
+        <input
+          type="number"
+          [(ngModel)]="editLogDraft.totalTime"
+          [class.invalid-input]="isLogTimeInvalid(editLogDraft)"
+        />
+        @if (isLogTimeInvalid(editLogDraft)) {
+        <div class="error-text">Time must be 0 or greater.</div>
+        }
+      </label>
+
+      <label>
+        Rating
+        <input
+          type="number"
+          [(ngModel)]="editLogDraft.rating"
+          [class.invalid-input]="isLogRatingInvalid(editLogDraft)"
+        />
+        @if (isLogRatingInvalid(editLogDraft)) {
+        <div class="error-text">Rating must be between 1 and 5.</div>
+        }
+      </label>
     </div>
 
-    <ul class="log-list">
-      @for (log of selectedTour.logs; track log.id) {
-      <app-tour-log-card
-        [log]="log"
-        (deleteRequested)="deleteLog($event)"
-        (saveRequested)="saveLog($event)"
-      ></app-tour-log-card>
-      }
-    </ul>
-    } @else {
-    <p>No tour selected.</p>
-    }
-  </section>
-</main>
+    <div class="modal-actions">
+      <button type="button" class="secondary-button" (click)="closeLogEditModal()" [disabled]="isLoading">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="action-button"
+        (click)="saveEditedLog()"
+        [disabled]="!isEditLogDraftValid || isLoading"
+      >
+        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+

@@ -3,6 +3,7 @@ package at.fhtw.backend.controller;
 import at.fhtw.backend.model.TourLog;
 import at.fhtw.backend.service.TourService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,8 @@ public class TourLogController {
     }
 
     @PutMapping("/{logId}")
-    public ResponseEntity<TourLog> updateLog(@PathVariable Long logId, @RequestBody TourLog updatedLog) {
-        TourLog log = tourService.updateLog(logId, updatedLog);
+    public ResponseEntity<TourLog> updateLog(@PathVariable Long logId, @RequestBody TourLog updatedLog, Authentication authentication) {
+        TourLog log = tourService.updateLog(authentication.getName(), logId, updatedLog);
 
         if (log == null) {
             return ResponseEntity.notFound().build();
@@ -27,8 +28,8 @@ public class TourLogController {
     }
 
     @DeleteMapping("/{logId}")
-    public ResponseEntity<Void> deleteLog(@PathVariable Long logId) {
-        boolean deleted = tourService.deleteLog(logId);
+    public ResponseEntity<Void> deleteLog(@PathVariable Long logId, Authentication authentication) {
+        boolean deleted = tourService.deleteLog(authentication.getName(), logId);
 
         if (!deleted) {
             return ResponseEntity.notFound().build();

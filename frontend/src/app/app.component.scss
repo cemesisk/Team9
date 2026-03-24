@@ -1,97 +1,86 @@
 :host {
   display: block;
+  min-height: 100vh;
+  background-color: #f5f7fb;
+  color: #1f2937;
   font-family: Arial, sans-serif;
-  color: #222;
 }
 
 header {
-  background-color: #1f3b5b;
+  background-color: #1d4ed8;
   color: white;
-  padding: 1rem 1.5rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
 }
 
-header h1 {
-  margin: 0;
+.header-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auth-layout {
+  min-height: calc(100vh - 84px);
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.auth-card {
+  width: min(460px, 100%);
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.active-auth-tab {
+  background-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.auth-form {
+  margin-bottom: 1rem;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 1rem;
-  padding: 1rem;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  align-items: start;
 }
 
 .left-panel,
 .right-panel {
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.tour-list,
-.log-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.tour-item {
-  margin-bottom: 0.5rem;
-}
-
-.tour-item button {
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
   background-color: white;
-  cursor: pointer;
-}
-
-.tour-item button:hover {
-  background-color: #ececec;
-}
-
-.tour-item.selected button {
-  background-color: #dcecff;
-  border-color: #4a90e2;
-}
-
-.tour-details p,
-.log-item p {
-  margin: 0.4rem 0;
-}
-
-.tour-image {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.map-placeholder {
-  margin-top: 1rem;
-  padding: 2rem;
-  border: 2px dashed #999;
-  border-radius: 8px;
-  text-align: center;
-  background-color: #fafafa;
-}
-
-.log-item {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .panel-header {
@@ -100,122 +89,265 @@ header h1 {
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+
+  h2,
+  h3 {
+    margin: 0;
+  }
 }
 
-.panel-header h2 {
-  margin: 0;
+.logs-header {
+  margin-top: 2rem;
 }
 
 .action-button,
-.delete-button {
+.delete-button,
+.secondary-button,
+.tour-item button {
   border: none;
-  border-radius: 6px;
-  padding: 0.65rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font: inherit;
+  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action-button,
+.delete-button,
+.secondary-button {
+  padding: 0.65rem 1rem;
+  font-weight: 600;
 }
 
 .action-button {
-  background-color: #1f3b5b;
+  background-color: #2563eb;
   color: white;
+}
+
+.action-button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 .delete-button {
-  background-color: #b42318;
+  background-color: #dc2626;
   color: white;
 }
 
-.action-button:hover,
-.delete-button:hover {
-  opacity: 0.9;
+.secondary-button {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.delete-button:hover:not(:disabled) {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.action-button:disabled,
+.delete-button:disabled,
+.secondary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status-message {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.error-message {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.success-message {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.info-text {
+  color: #4b5563;
+  margin: 0.5rem 0 1rem;
+}
+
+.tour-list,
+.log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tour-item {
+  margin-bottom: 0.75rem;
+}
+
+.tour-item button {
+  width: 100%;
+  text-align: left;
+  background-color: #eef2ff;
+  color: #1f2937;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+}
+
+.tour-item button:hover {
+  background-color: #dbeafe;
+}
+
+.tour-item.selected button {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tour-details {
+  margin-bottom: 1.5rem;
+
+  p {
+    margin: 0.4rem 0;
+  }
+}
+
+.tour-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tour-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+
+.tour-map {
+  margin-top: 1rem;
+  height: 260px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.edit-form {
+  display: grid;
+  gap: 1rem;
+
+  h3 {
+    margin: 0 0 0.25rem;
+  }
+
+  label {
+    display: grid;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+    background-color: white;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+}
+
+.invalid-input {
+  border-color: #dc2626 !important;
+  background-color: #fef2f2;
+}
+
+.error-text {
+  font-size: 0.88rem;
+  color: #b91c1c;
+  font-weight: 500;
+}
+
+.log-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.55);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-dialog {
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 @media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
   .panel-header {
     flex-direction: column;
     align-items: stretch;
   }
-}
 
-.edit-form {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.edit-form h3 {
-  margin-top: 0;
-}
-
-.edit-form label {
-  display: block;
-  margin-bottom: 1rem;
-  font-weight: bold;
-}
-
-.edit-form input,
-.edit-form textarea {
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 0.35rem;
-  padding: 0.65rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font: inherit;
-}
-
-.edit-form textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.logs-header {
-  margin-top: 1.5rem;
-}
-
-.log-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.log-header h4 {
-  margin: 0;
-}
-
-.small-button {
-  padding: 0.45rem 0.75rem;
-  font-size: 0.9rem;
-}
-
-@media (max-width: 900px) {
-  .log-header {
-    flex-direction: column;
-    align-items: stretch;
+  .action-button,
+  .delete-button,
+  .secondary-button {
+    width: 100%;
   }
-}
 
-.log-edit-form {
-  margin-top: 1rem;
-}
+  .tour-actions,
+  .modal-actions {
+    flex-direction: column;
+  }
 
-.log-edit-form h4 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-
-.invalid-input {
-  border: 2px solid #d92d20 !important;
-  background-color: #fff5f5;
-}
-
-.error-text {
-  margin-top: 0.35rem;
-  color: #d92d20;
-  font-size: 0.9rem;
-  font-weight: normal;
+  .header-auth {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
