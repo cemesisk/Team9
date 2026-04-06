@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Planner – Wireframe</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── LEGEND ───────────────────────────────────── */
+    .legend {
+      background: #fff;
+      border-bottom: 2px solid #ccc;
+      padding: 10px 24px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+    .legend strong { font-size: 13px; margin-right: 6px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    .dot-header  { background: #4a6fa5; }
+    .dot-panel   { background: #e8edf4; border: 1px solid #aab; }
+    .dot-card    { background: #fff; border: 1px solid #bcd; }
+    .dot-btn     { background: #4a6fa5; border-radius: 50%; }
+    .dot-danger  { background: #c0392b; border-radius: 50%; }
+    .dot-field   { background: #fafafa; border: 1px solid #ccc; }
+    .dot-map     { background: #d6e8d6; border: 1px solid #8ab; }
+
+    /* ── PAGE TITLE ───────────────────────────────── */
+    .page-title {
+      text-align: center;
+      padding: 18px 0 4px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #4a6fa5;
+      letter-spacing: 1px;
+    }
+    .page-subtitle {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 18px;
+    }
+
+    /* ── SCREEN WRAPPER ───────────────────────────── */
+    .screen-row {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 24px 40px;
+    }
+
+    .screen-block {
+      background: #fff;
+      border: 2px solid #c0c8d8;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    }
+    .screen-title {
+      background: #4a6fa5;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .screen-title span.badge {
+      background: rgba(255,255,255,.25);
+      border-radius: 10px;
+      padding: 1px 8px;
+      font-size: 11px;
+    }
+
+    /* ── APP HEADER ───────────────────────────────── */
+    .wf-header {
+      background: #4a6fa5;
+      color: #fff;
+      padding: 10px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wf-header .logo-box {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,.3);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    /* ── LAYOUT PANELS ────────────────────────────── */
+    .wf-body { display: flex; }
+
+    .wf-left {
+      width: 220px;
+      min-width: 220px;
+      background: #e8edf4;
+      border-right: 1px solid #c0c8d8;
+      padding: 12px;
+    }
+    .wf-right {
+      flex: 1;
+      background: #f7f9fc;
+      padding: 12px;
+      min-width: 0;
+    }
+
+    /* ── PANEL HEADER ─────────────────────────────── */
+    .panel-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .panel-hdr h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #4a6fa5;
+    }
+
+    /* ── BUTTONS ──────────────────────────────────── */
+    .btn {
+      border: none;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-primary { background: #4a6fa5; color: #fff; }
+    .btn-danger  { background: #c0392b; color: #fff; }
+    .btn-ghost   {
+      background: transparent;
+      border: 1px solid #4a6fa5;
+      color: #4a6fa5;
+    }
+
+    /* ── TOUR LIST ────────────────────────────────── */
+    .tour-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .tour-item {
+      background: #fff;
+      border: 1px solid #c0c8d8;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tour-item.active {
+      background: #4a6fa5;
+      color: #fff;
+      border-color: #4a6fa5;
+    }
+    .tour-item .icon { font-size: 14px; }
+
+    /* ── SEARCH BOX ───────────────────────────────── */
+    .search-box {
+      width: 100%;
+      border: 1px solid #c0c8d8;
+      border-radius: 5px;
+      padding: 5px 8px;
+      font-size: 11px;
+      background: #fff;
+      color: #555;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .search-box span { color: #aaa; font-size: 13px; }
+
+    /* ── DETAILS SECTION ──────────────────────────── */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .detail-field {
+      background: #fff;
+      border: 1px solid #c0c8d8;
+      border-radius: 5px;
+      padding: 6px 8px;
+      font-size: 10px;
+    }
+    .detail-field label {
+      display: block;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      color: #888;
+      margin-bottom: 2px;
+    }
+    .detail-field .val {
+      font-weight: 600;
+      color: #1a1a2e;
+      font-size: 11px;
+    }
+    .detail-field.full { grid-column: 1 / -1; }
+
+    /* ── MAP ──────────────────────────────────────── */
+    .map-box {
+      background: #d6e8d6;
+      border: 1px dashed #8ab;
+      border-radius: 6px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #4a7a4a;
+      margin-bottom: 10px;
+      gap: 4px;
+    }
+    .map-box span { font-size: 28px; }
+
+    /* ── TOUR IMAGE ───────────────────────────────── */
+    .img-box {
+      background: #e0e8f0;
+      border: 1px dashed #aab;
+      border-radius: 6px;
+      height: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #7a8a9a;
+      margin-bottom: 8px;
+      gap: 2px;
+      grid-column: 1 / -1;
+    }
+    .img-box span { font-size: 24px; }
+
+    /* ── EDIT FORM ────────────────────────────────── */
+    .edit-form {
+      background: #fff;
+      border: 1px solid #c0c8d8;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .edit-form h4 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #4a6fa5;
+      margin-bottom: 8px;
+      letter-spacing: .4px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      color: #888;
+    }
+    .form-field .input-box {
+      background: #fafafa;
+      border: 1px solid #c0c8d8;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 10px;
+      color: #333;
+    }
+    .form-field .input-box.textarea { height: 34px; }
+
+    /* ── LOG CARD ─────────────────────────────────── */
+    .log-card {
+      background: #fff;
+      border: 1px solid #c0c8d8;
+      border-radius: 7px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+    .log-card-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .log-card-hdr .date {
+      font-weight: 700;
+      font-size: 11px;
+      color: #4a6fa5;
+    }
+    .log-card-hdr .actions { display: flex; gap: 4px; }
+    .log-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .log-meta-item { text-align: center; }
+    .log-meta-item .lbl {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      color: #aaa;
+    }
+    .log-meta-item .val {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    .stars { color: #f39c12; font-size: 11px; }
+
+    /* ── DIVIDER ──────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px dashed #c0c8d8;
+      margin: 10px 0;
+    }
+
+    /* ── EMPTY STATE ──────────────────────────────── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 120px;
+      color: #bbb;
+      font-size: 12px;
+      gap: 6px;
+    }
+    .empty-state span { font-size: 36px; }
+
+    /* ── ANNOTATIONS ──────────────────────────────── */
+    .annotation {
+      font-size: 9px;
+      color: #e67e22;
+      background: #fef9f0;
+      border: 1px solid #f0c080;
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    /* ── NO-TOUR STATE (right panel) ──────────────── */
+    .no-tour-msg {
+      font-size: 11px;
+      color: #aaa;
+      font-style: italic;
+      padding: 8px 0;
+    }
+
+    /* ── SECTION HEADERS ──────────────────────────── */
+    .section-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      margin-top: 4px;
+    }
+    .section-hdr h4 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #4a6fa5;
+      letter-spacing: .4px;
+    }
+
+    /* ── SCROLLBAR INDICATOR ──────────────────────── */
+    .scroll-indicator {
+      width: 4px;
+      background: #c0c8d8;
+      border-radius: 2px;
+      height: 60px;
+      position: absolute;
+      right: 2px;
+      top: 30px;
+    }
+
+    /* ── FLOW ARROWS ──────────────────────────────── */
+    .flow-section {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+    .flow-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #4a6fa5;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      background: #fff;
+      border: 2px solid #4a6fa5;
+      border-radius: 8px;
+      padding: 10px 16px;
+      text-align: center;
+      min-width: 110px;
+    }
+    .flow-step .step-icon { font-size: 22px; }
+    .flow-step .step-name { font-size: 11px; font-weight: 700; color: #4a6fa5; margin-top: 4px; }
+    .flow-step .step-desc { font-size: 9px; color: #888; margin-top: 2px; }
+    .flow-arrow {
+      font-size: 22px;
+      color: #4a6fa5;
+      padding: 0 6px;
+      line-height: 1;
+    }
+
+    /* ── DATA MODEL TABLE ─────────────────────────── */
+    .model-section {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+    .model-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #4a6fa5;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .model-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .model-card {
+      background: #fff;
+      border: 2px solid #4a6fa5;
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 200px;
+      flex: 1;
+    }
+    .model-card-hdr {
+      background: #4a6fa5;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      letter-spacing: .5px;
+    }
+    .model-card table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .model-card td {
+      padding: 4px 10px;
+      border-bottom: 1px solid #e8edf4;
+    }
+    .model-card td:first-child { color: #4a6fa5; font-weight: 600; }
+    .model-card td:last-child { color: #888; }
+
+    /* ── API TABLE ────────────────────────────────── */
+    .api-section {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+    .api-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #4a6fa5;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 11px;
+      border: 1px solid #c0c8d8;
+    }
+    .api-table th {
+      background: #4a6fa5;
+      color: #fff;
+      padding: 7px 12px;
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: .4px;
+    }
+    .api-table td { padding: 6px 12px; border-bottom: 1px solid #e8edf4; }
+    .api-table tr:last-child td { border-bottom: none; }
+    .method {
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-weight: 700;
+      font-size: 10px;
+      color: #fff;
+    }
+    .GET    { background: #27ae60; }
+    .POST   { background: #2980b9; }
+    .PUT    { background: #e67e22; }
+    .DELETE { background: #c0392b; }
+  </style>
+</head>
+<body>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <strong>Legende:</strong>
+    <div class="legend-item"><div class="dot dot-header"></div> App-Header / Panel-Titel</div>
+    <div class="legend-item"><div class="dot dot-panel"></div> Hintergrund-Panel</div>
+    <div class="legend-item"><div class="dot dot-card"></div> Karte / Eingabefeld</div>
+    <div class="legend-item"><div class="dot dot-btn"></div> Primär-Button</div>
+    <div class="legend-item"><div class="dot dot-danger"></div> Lösch-Button</div>
+    <div class="legend-item"><div class="dot dot-map"></div> Karten-Platzhalter</div>
+  </div>
+
+  <div class="page-title">🗺️ Tour Planner – Wireframe</div>
+  <div class="page-subtitle">Angular Frontend + Spring Boot Backend · Stand: April 2026</div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 1 – Kein Tour ausgewählt
+  ══════════════════════════════════════════════ -->
+  <div class="screen-row">
+
+    <div class="screen-block" style="width:520px;">
+      <div class="screen-title">
+        📄 Screen 1 – Startansicht (kein Tour ausgewählt)
+        <span class="badge">Leerzustand</span>
+      </div>
+
+      <!-- App-Header -->
+      <div class="wf-header">
+        <div class="logo-box">🗺️</div>
+        Tour Planner
+      </div>
+
+      <!-- Body -->
+      <div class="wf-body">
+
+        <!-- LEFT PANEL -->
+        <div class="wf-left">
+          <div class="panel-hdr">
+            <h3>Tours</h3>
+            <button class="btn btn-primary">＋ Add Tour</button>
+          </div>
+
+          <div class="search-box">
+            <span>🔍</span> Search tours…
+          </div>
+
+          <ul class="tour-list">
+            <li class="tour-item"><span class="icon">📍</span> Vienna → Salzburg</li>
+            <li class="tour-item"><span class="icon">📍</span> Graz → Linz</li>
+            <li class="tour-item"><span class="icon">📍</span> Innsbruck Loop</li>
+          </ul>
+        </div>
+
+        <!-- RIGHT PANEL – no selection -->
+        <div class="wf-right">
+          <div class="empty-state">
+            <span>👈</span>
+            <p>Bitte eine Tour aus der Liste auswählen.</p>
+          </div>
+        </div>
+
+      </div><!-- /wf-body -->
+    </div><!-- /screen-block -->
+
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN 2 – Tour ausgewählt (Details + Edit + Logs)
+  ══════════════════════════════════════════════ -->
+    <div class="screen-block" style="width:680px;">
+      <div class="screen-title">
+        📋 Screen 2 – Tour ausgewählt (Details · Bearbeiten · Logs)
+        <span class="badge">Hauptansicht</span>
+      </div>
+
+      <!-- App-Header -->
+      <div class="wf-header">
+        <div class="logo-box">🗺️</div>
+        Tour Planner
+      </div>
+
+      <!-- Body -->
+      <div class="wf-body">
+
+        <!-- LEFT PANEL -->
+        <div class="wf-left">
+          <div class="panel-hdr">
+            <h3>Tours</h3>
+            <button class="btn btn-primary">＋ Add Tour</button>
+          </div>
+
+          <div class="search-box">
+            <span>🔍</span> Search tours…
+          </div>
+
+          <ul class="tour-list">
+            <li class="tour-item active"><span class="icon">📍</span> Vienna → Salzburg</li>
+            <li class="tour-item"><span class="icon">📍</span> Graz → Linz</li>
+            <li class="tour-item"><span class="icon">📍</span> Innsbruck Loop</li>
+          </ul>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="wf-right">
+
+          <!-- ① Tour Details -->
+          <div class="panel-hdr">
+            <h3>Tour Details</h3>
+            <button class="btn btn-danger">🗑 Delete Tour</button>
+          </div>
+
+          <div class="detail-grid">
+            <div class="img-box">
+              <span>🖼️</span>
+              Tour-Bild (imageUrl)
+            </div>
+            <div class="detail-field">
+              <label>Name</label>
+              <div class="val">Vienna → Salzburg</div>
+            </div>
+            <div class="detail-field">
+              <label>Transport Type</label>
+              <div class="val">🚗 Car</div>
+            </div>
+            <div class="detail-field">
+              <label>From</label>
+              <div class="val">Vienna</div>
+            </div>
+            <div class="detail-field">
+              <label>To</label>
+              <div class="val">Salzburg</div>
+            </div>
+            <div class="detail-field">
+              <label>Distance</label>
+              <div class="val">295 km</div>
+            </div>
+            <div class="detail-field">
+              <label>Estimated Time</label>
+              <div class="val">3h 10min</div>
+            </div>
+            <div class="detail-field full">
+              <label>Description</label>
+              <div class="val">Scenic highway drive along the A1.</div>
+            </div>
+          </div>
+
+          <div class="map-box">
+            <span>🗺️</span>
+            Map Placeholder (OpenLayers / Leaflet)
+          </div>
+
+          <hr class="divider" />
+
+          <!-- ② Edit Form -->
+          <div class="edit-form">
+            <h4>✏️ Edit Tour</h4>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Name *</label>
+                <div class="input-box">Vienna → Salzburg</div>
+              </div>
+              <div class="form-field">
+                <label>Transport Type</label>
+                <div class="input-box">Car</div>
+              </div>
+              <div class="form-field">
+                <label>From *</label>
+                <div class="input-box">Vienna</div>
+              </div>
+              <div class="form-field">
+                <label>To *</label>
+                <div class="input-box">Salzburg</div>
+              </div>
+              <div class="form-field">
+                <label>Distance (km) *</label>
+                <div class="input-box">295</div>
+              </div>
+              <div class="form-field">
+                <label>Estimated Time *</label>
+                <div class="input-box">3h 10min</div>
+              </div>
+              <div class="form-field full">
+                <label>Description</label>
+                <div class="input-box textarea">Scenic highway drive…</div>
+              </div>
+              <div class="form-field full">
+                <label>Image URL</label>
+                <div class="input-box">https://…</div>
+              </div>
+              <div class="form-field full" style="align-items:flex-end;">
+                <button class="btn btn-primary" style="padding:5px 16px; font-size:12px;">💾 Save Changes</button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- ③ Tour Logs -->
+          <div class="section-hdr">
+            <h4>📝 Tour Logs</h4>
+            <button class="btn btn-primary">＋ Add Log</button>
+          </div>
+
+          <!-- Log Card 1 -->
+          <div class="log-card">
+            <div class="log-card-hdr">
+              <div class="date">📅 2025-08-14 09:00</div>
+              <div class="actions">
+                <button class="btn btn-primary" style="padding:2px 8px;">💾 Save</button>
+                <button class="btn btn-danger"  style="padding:2px 8px;">🗑</button>
+              </div>
+            </div>
+            <div class="log-meta">
+              <div class="log-meta-item">
+                <div class="lbl">Difficulty</div>
+                <div class="val">3 / 5</div>
+              </div>
+              <div class="log-meta-item">
+                <div class="lbl">Distance</div>
+                <div class="val">297 km</div>
+              </div>
+              <div class="log-meta-item">
+                <div class="lbl">Time (min)</div>
+                <div class="val">190</div>
+              </div>
+              <div class="log-meta-item" style="grid-column:1/-1; text-align:left; margin-top:4px;">
+                <div class="lbl">Comment</div>
+                <div class="val" style="font-weight:400; font-size:10px;">Great drive, a bit of traffic near Linz.</div>
+              </div>
+              <div class="log-meta-item">
+                <div class="lbl">Rating</div>
+                <div class="val stars">★★★★☆</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Log Card 2 (edit mode) -->
+          <div class="log-card" style="border-color:#4a6fa5; border-style: dashed;">
+            <div class="log-card-hdr">
+              <div class="date">📅 2025-10-02 07:30 <span class="annotation">Bearbeitung aktiv</span></div>
+              <div class="actions">
+                <button class="btn btn-primary" style="padding:2px 8px;">💾 Save</button>
+                <button class="btn btn-danger"  style="padding:2px 8px;">🗑</button>
+              </div>
+            </div>
+            <div class="form-grid" style="margin-top:4px;">
+              <div class="form-field">
+                <label>Date/Time</label>
+                <div class="input-box">2025-10-02T07:30</div>
+              </div>
+              <div class="form-field">
+                <label>Difficulty (1–5)</label>
+                <div class="input-box">4</div>
+              </div>
+              <div class="form-field">
+                <label>Total Distance (km)</label>
+                <div class="input-box">298</div>
+              </div>
+              <div class="form-field">
+                <label>Total Time (min)</label>
+                <div class="input-box">200</div>
+              </div>
+              <div class="form-field">
+                <label>Rating (1–5)</label>
+                <div class="input-box">5</div>
+              </div>
+              <div class="form-field full">
+                <label>Comment</label>
+                <div class="input-box textarea">Early morning, no traffic!</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /right panel -->
+      </div><!-- /wf-body -->
+    </div><!-- /screen-block -->
+
+  </div><!-- /screen-row -->
+
+
+  <!-- ══════════════════════════════════════════════
+       USER FLOW
+  ══════════════════════════════════════════════ -->
+  <div class="flow-section">
+    <div class="flow-title">🔄 User Flow</div>
+    <div class="flow-row">
+      <div class="flow-step">
+        <div class="step-icon">🚀</div>
+        <div class="step-name">App öffnen</div>
+        <div class="step-desc">Leere Tour-Liste</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">➕</div>
+        <div class="step-name">Tour anlegen</div>
+        <div class="step-desc">„Add Tour" klicken</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">✏️</div>
+        <div class="step-name">Tour bearbeiten</div>
+        <div class="step-desc">Felder ausfüllen → Save</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">📝</div>
+        <div class="step-name">Log hinzufügen</div>
+        <div class="step-desc">„Add Log" → Daten eingeben</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">💾</div>
+        <div class="step-name">Log speichern</div>
+        <div class="step-desc">Per „Save"-Button</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-icon">🗑️</div>
+        <div class="step-name">Tour / Log löschen</div>
+        <div class="step-desc">Delete-Button</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       DATA MODEL
+  ══════════════════════════════════════════════ -->
+  <div class="model-section">
+    <div class="model-title">🗃️ Datenmodell</div>
+    <div class="model-row">
+
+      <div class="model-card">
+        <div class="model-card-hdr">Tour</div>
+        <table>
+          <tr><td>id</td><td>number (auto)</td></tr>
+          <tr><td>name</td><td>string *</td></tr>
+          <tr><td>description</td><td>string</td></tr>
+          <tr><td>from</td><td>string *</td></tr>
+          <tr><td>to</td><td>string *</td></tr>
+          <tr><td>transportType</td><td>string</td></tr>
+          <tr><td>distance</td><td>number ≥ 0 *</td></tr>
+          <tr><td>estimatedTime</td><td>string *</td></tr>
+          <tr><td>imageUrl</td><td>string</td></tr>
+          <tr><td>logs</td><td>TourLog[]</td></tr>
+        </table>
+      </div>
+
+      <div class="model-card">
+        <div class="model-card-hdr">TourLog</div>
+        <table>
+          <tr><td>id</td><td>number (auto)</td></tr>
+          <tr><td>dateTime</td><td>string (ISO)</td></tr>
+          <tr><td>comment</td><td>string</td></tr>
+          <tr><td>difficulty</td><td>number 1–5</td></tr>
+          <tr><td>totalDistance</td><td>number km</td></tr>
+          <tr><td>totalTime</td><td>number min</td></tr>
+          <tr><td>rating</td><td>number 1–5</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════
+       REST API ENDPOINTS
+  ══════════════════════════════════════════════ -->
+  <div class="api-section">
+    <div class="api-title">🔌 REST API Endpunkte (Spring Boot)</div>
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>Methode</th>
+          <th>Endpoint</th>
+          <th>Beschreibung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td>/api/tours</td>
+          <td>Alle Touren abrufen</td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td>/api/tours</td>
+          <td>Neue Tour erstellen</td>
+        </tr>
+        <tr>
+          <td><span class="method PUT">PUT</span></td>
+          <td>/api/tours/{id}</td>
+          <td>Tour aktualisieren</td>
+        </tr>
+        <tr>
+          <td><span class="method DELETE">DELETE</span></td>
+          <td>/api/tours/{id}</td>
+          <td>Tour löschen</td>
+        </tr>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td>/api/tours/{id}/logs</td>
+          <td>Alle Logs einer Tour abrufen</td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td>/api/tours/{id}/logs</td>
+          <td>Neues Log erstellen</td>
+        </tr>
+        <tr>
+          <td><span class="method PUT">PUT</span></td>
+          <td>/api/tours/{id}/logs/{logId}</td>
+          <td>Log aktualisieren</td>
+        </tr>
+        <tr>
+          <td><span class="method DELETE">DELETE</span></td>
+          <td>/api/tours/{id}/logs/{logId}</td>
+          <td>Log löschen</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
