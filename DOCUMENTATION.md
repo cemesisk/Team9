@@ -1,4 +1,4 @@
-# 📚 Tour Planner – Technische Dokumentation
+# Tour Planner – Technische Dokumentation
 
 > **Projekt:** Tour Planner  
 > **Team:** Team 9 – FH Technikum Wien  
@@ -7,7 +7,7 @@
 
 ---
 
-## 📑 Inhaltsverzeichnis
+## Inhaltsverzeichnis
 
 1. [Projektübersicht](#1-projektübersicht)
 2. [Systemarchitektur](#2-systemarchitektur)
@@ -44,9 +44,9 @@ Der **Tour Planner** ist eine Fullstack-Webanwendung, mit der Nutzer Touren anle
 
 ```mermaid
 graph LR
-    User([👤 Benutzer]) -->|Browser| FE
-    FE[🌐 Angular Frontend\nlocalhost:4200] -->|HTTP REST / JSON| BE
-    BE[☕ Spring Boot Backend\nlocalhost:8080] -->|In-Memory List| DB[(📋 In-Memory\nDatenspeicher)]
+    User([Benutzer]) -->|Browser| FE
+    FE[Angular Frontend\nlocalhost:4200] -->|HTTP REST / JSON| BE
+    BE[Spring Boot Backend\nlocalhost:8080] -->|In-Memory List| DB[(In-Memory\nDatenspeicher)]
 
     style FE fill:#4a6fa5,color:#fff
     style BE fill:#6aa84f,color:#fff
@@ -128,13 +128,13 @@ erDiagram
 | Feld | Typ | Pflicht | Beschreibung |
 |---|---|---|---|
 | `id` | `Long` | auto | Eindeutige ID (auto-increment) |
-| `name` | `String` | ✅ | Name der Tour |
+| `name` | `String` | ja | Name der Tour |
 | `description` | `String` | – | Beschreibung |
-| `fromLocation` | `String` | ✅ | Startort |
-| `toLocation` | `String` | ✅ | Zielort |
+| `fromLocation` | `String` | ja | Startort |
+| `toLocation` | `String` | ja | Zielort |
 | `transportType` | `String` | – | z. B. `Walking`, `Bicycle`, `Car` |
-| `distance` | `double` | ✅ (≥ 0) | Distanz in km |
-| `estimatedTime` | `double` | ✅ | Geschätzte Zeit in Stunden |
+| `distance` | `double` | ja (>= 0) | Distanz in km |
+| `estimatedTime` | `double` | ja | Geschätzte Zeit in Stunden |
 | `imageUrl` | `String` | – | URL zum Tourenbild |
 | `logs` | `List<TourLog>` | – | Liste der Reiseprotokolle |
 
@@ -144,11 +144,11 @@ erDiagram
 |---|---|---|---|
 | `id` | `Long` | auto | Eindeutige ID |
 | `date` | `String` | – | Datum (ISO: `YYYY-MM-DD`) |
-| `comment` | `String` | ✅ | Kommentar zum Erlebnis |
-| `difficulty` | `String` | ✅ | `Very Easy` / `Easy` / `Medium` / `Hard` / `Very Hard` |
-| `totalDistance` | `double` | ✅ (≥ 0) | Tatsächlich zurückgelegte Distanz in km |
-| `totalTime` | `double` | ✅ (≥ 0) | Tatsächlich benötigte Zeit in Stunden |
-| `rating` | `int` | ✅ (1–5) | Bewertung der Tour |
+| `comment` | `String` | ja | Kommentar zum Erlebnis |
+| `difficulty` | `String` | ja | `Very Easy` / `Easy` / `Medium` / `Hard` / `Very Hard` |
+| `totalDistance` | `double` | ja (>= 0) | Tatsächlich zurückgelegte Distanz in km |
+| `totalTime` | `double` | ja (>= 0) | Tatsächlich benötigte Zeit in Stunden |
+| `rating` | `int` | ja (1–5) | Bewertung der Tour |
 
 ---
 
@@ -339,7 +339,7 @@ Validierung findet ausschließlich im **Frontend** statt. Felder mit Fehler werd
 | `name` | Nicht leer | *Name must not be empty* |
 | `from` | Nicht leer | *Start location must not be empty* |
 | `to` | Nicht leer | *Destination must not be empty* |
-| `distance` | `≥ 0` | *Distance must be 0 or greater* |
+| `distance` | `>= 0` | *Distance must be 0 or greater* |
 | `estimatedTime` | Nicht leer | *Estimated time must not be empty* |
 
 ### Log-Validierung
@@ -347,9 +347,9 @@ Validierung findet ausschließlich im **Frontend** statt. Felder mit Fehler werd
 | Feld | Regel |
 |---|---|
 | `comment` | Nicht leer |
-| `difficulty` | `≥ 0` |
-| `totalDistance` | `≥ 0` |
-| `totalTime` | `≥ 0` |
+| `difficulty` | `>= 0` |
+| `totalDistance` | `>= 0` |
+| `totalTime` | `>= 0` |
 | `rating` | `1 – 5` |
 
 ---
@@ -388,7 +388,7 @@ Frontend läuft auf → **http://localhost:4200**
 
 ```mermaid
 sequenceDiagram
-    participant Dev as 👨‍💻 Entwickler
+    participant Dev as Entwickler
     participant BE as Spring Boot
     participant FE as Angular
 
