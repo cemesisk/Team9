@@ -9,42 +9,54 @@ Eine Fullstack-Webanwendung zur Verwaltung von Touren und Reiseprotokollen.
 
 ## Wireframe - Gesamtstruktur der Anwendung
 
-```
-+------------------------------------------------------------------+
-|                        Tour Planner Header                        |
-+------------------------------------------------------------------+
-|                                                                  |
-|  +-------------------------+  +-------------------------------+  |
-|  |                         |  |                               |  |
-|  |   Tour Liste            |  |   Tour Details                |  |
-|  |                         |  |                               |  |
-|  |  [ ] Tour 1             |  |   Name: Vienna City Tour      |  |
-|  |  [x] Tour 2  (selected) |  |   Von: Stephansplatz          |  |
-|  |  [ ] Tour 3             |  |   Nach: Schoenbrunn           |  |
-|  |                         |  |   Transport: Walking          |  |
-|  |  [+ Add Tour]           |  |   Distanz: 5.2 km             |  |
-|  |                         |  |   Zeit: 1.5 h                 |  |
-|  |                         |  |                               |  |
-|  |                         |  |   +-------------------------+ |  |
-|  |                         |  |   |   Karte Placeholder     | |  |
-|  |                         |  |   |                         | |  |
-|  |                         |  |   +-------------------------+ |  |
-|  |                         |  |                               |  |
-|  |                         |  |   [Edit] [Delete] [Save]      |  |
-|  |                         |  |                               |  |
-|  |                         |  |   --- Tour Logs ---           |  |
-|  |                         |  |                               |  |
-|  |                         |  |   Log 1:                      |  |
-|  |                         |  |   - Datum: 2026-03-15         |  |
-|  |                         |  |   - Schwierigkeit: Medium     |  |
-|  |                         |  |   - Bewertung: 4/5            |  |
-|  |                         |  |   [Edit Log] [Delete Log]     |  |
-|  |                         |  |                               |  |
-|  |                         |  |   [+ Add Log]                 |  |
-|  |                         |  |                               |  |
-|  +-------------------------+  +-------------------------------+  |
-|                                                                  |
-+------------------------------------------------------------------+
+```mermaid
+graph TB
+    subgraph App["Tour Planner Application"]
+        direction TB
+        Header["Tour Planner Header"]
+        
+        subgraph MainLayout["Main Layout"]
+            direction LR
+            
+            subgraph LeftPanel["Linkes Panel - Tour Liste"]
+                direction TB
+                TourList["Tour 1<br/>Tour 2 (ausgewaehlt)<br/>Tour 3"]
+                AddTourBtn["[+ Add Tour Button]"]
+                TourList --> AddTourBtn
+            end
+            
+            subgraph RightPanel["Rechtes Panel - Tour Details"]
+                direction TB
+                TourInfo["Name: Vienna City Tour<br/>Von: Stephansplatz<br/>Nach: Schoenbrunn<br/>Transport: Walking<br/>Distanz: 5.2 km<br/>Zeit: 1.5 h"]
+                MapPlaceholder["Karten-Platzhalter<br/>(Map Placeholder)"]
+                ActionButtons["[Edit] [Delete] [Save]"]
+                LogSection["--- Tour Logs ---"]
+                LogCard["Log 1:<br/>Datum: 2026-03-15<br/>Schwierigkeit: Medium<br/>Bewertung: 4/5<br/>[Edit Log] [Delete Log]"]
+                AddLogBtn["[+ Add Log Button]"]
+                
+                TourInfo --> MapPlaceholder
+                MapPlaceholder --> ActionButtons
+                ActionButtons --> LogSection
+                LogSection --> LogCard
+                LogCard --> AddLogBtn
+            end
+            
+            LeftPanel -.->|Auswahl| RightPanel
+        end
+        
+        Header --> MainLayout
+    end
+    
+    style Header fill:#4a6fa5,stroke:#333,stroke-width:2px,color:#fff
+    style LeftPanel fill:#e8f4f8,stroke:#333,stroke-width:2px
+    style RightPanel fill:#f0f8e8,stroke:#333,stroke-width:2px
+    style TourList fill:#fff,stroke:#666
+    style AddTourBtn fill:#6aa84f,stroke:#333,color:#fff
+    style TourInfo fill:#fff,stroke:#666
+    style MapPlaceholder fill:#ddd,stroke:#666
+    style ActionButtons fill:#6aa84f,stroke:#333,color:#fff
+    style LogCard fill:#fff,stroke:#666
+    style AddLogBtn fill:#6aa84f,stroke:#333,color:#fff
 ```
 
 ---
