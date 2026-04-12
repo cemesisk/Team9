@@ -1,21 +1,65 @@
-# 🗺️ Tour Planner
+# Tour Planner
+
+Re-upload: Repository wurde versehentlich geloescht beim Wechseln von Branches.
 
 Eine Fullstack-Webanwendung zur Verwaltung von Touren und Reiseprotokollen.  
-**Frontend:** Angular · **Backend:** Spring Boot · **Datenbank:** PostgreSQL
+**Frontend:** Angular | **Backend:** Spring Boot | **Datenbank:** PostgreSQL
 
 ---
 
-## 🏗️ Architektur
+## Wireframe - Gesamtstruktur der Anwendung
 
-```mermaid
-graph LR
-    A[🌐 Angular Frontend<br/>localhost:4200] -->|HTTP REST| B[☕ Spring Boot Backend<br/>localhost:8080]
-    B -->|JPA / Hibernate| C[(🗄️ PostgreSQL<br/>Datenbank)]
+```
++------------------------------------------------------------------+
+|                        Tour Planner Header                        |
++------------------------------------------------------------------+
+|                                                                  |
+|  +-------------------------+  +-------------------------------+  |
+|  |                         |  |                               |  |
+|  |   Tour Liste            |  |   Tour Details                |  |
+|  |                         |  |                               |  |
+|  |  [ ] Tour 1             |  |   Name: Vienna City Tour      |  |
+|  |  [x] Tour 2  (selected) |  |   Von: Stephansplatz          |  |
+|  |  [ ] Tour 3             |  |   Nach: Schoenbrunn           |  |
+|  |                         |  |   Transport: Walking          |  |
+|  |  [+ Add Tour]           |  |   Distanz: 5.2 km             |  |
+|  |                         |  |   Zeit: 1.5 h                 |  |
+|  |                         |  |                               |  |
+|  |                         |  |   +-------------------------+ |  |
+|  |                         |  |   |   Karte Placeholder     | |  |
+|  |                         |  |   |                         | |  |
+|  |                         |  |   +-------------------------+ |  |
+|  |                         |  |                               |  |
+|  |                         |  |   [Edit] [Delete] [Save]      |  |
+|  |                         |  |                               |  |
+|  |                         |  |   --- Tour Logs ---           |  |
+|  |                         |  |                               |  |
+|  |                         |  |   Log 1:                      |  |
+|  |                         |  |   - Datum: 2026-03-15         |  |
+|  |                         |  |   - Schwierigkeit: Medium     |  |
+|  |                         |  |   - Bewertung: 4/5            |  |
+|  |                         |  |   [Edit Log] [Delete Log]     |  |
+|  |                         |  |                               |  |
+|  |                         |  |   [+ Add Log]                 |  |
+|  |                         |  |                               |  |
+|  +-------------------------+  +-------------------------------+  |
+|                                                                  |
++------------------------------------------------------------------+
 ```
 
 ---
 
-## 🗃️ Datenmodell
+## Architektur
+
+```mermaid
+graph LR
+    A[Angular Frontend<br/>localhost:4200] -->|HTTP REST| B[Spring Boot Backend<br/>localhost:8080]
+    B -->|JPA / Hibernate| C[(PostgreSQL<br/>Datenbank)]
+```
+
+---
+
+## Datenmodell
 
 ```mermaid
 erDiagram
@@ -45,181 +89,157 @@ erDiagram
 
 ---
 
-## 🔄 User Flow
+## Benutzerablauf
 
 ```mermaid
 flowchart TD
-    A([🚀 App öffnen]) --> B[Tour-Liste anzeigen]
+    A([App oeffnen]) --> B[Tour-Liste anzeigen]
     B --> C{Tour vorhanden?}
-    C -- Nein --> D[➕ Add Tour klicken]
-    D --> E[Tour-Felder ausfüllen]
-    E --> F[💾 Save Changes]
+    C -- Nein --> D[Add Tour klicken]
+    D --> E[Tour-Felder ausfuellen]
+    E --> F[Save Changes]
     F --> B
-    C -- Ja --> G[Tour auswählen]
-    G --> H[Details & Karte anzeigen]
+    C -- Ja --> G[Tour auswaehlen]
+    G --> H[Details und Karte anzeigen]
     H --> I{Aktion?}
     I -- Bearbeiten --> E
-    I -- Log hinzufügen --> J[➕ Add Log]
-    J --> K[Log-Felder ausfüllen]
-    K --> L[💾 Log speichern]
+    I -- Log hinzufuegen --> J[Add Log]
+    J --> K[Log-Felder ausfuellen]
+    K --> L[Log speichern]
     L --> H
-    I -- Löschen --> M[🗑️ Tour löschen]
+    I -- Loeschen --> M[Tour loeschen]
     M --> B
 ```
 
 ---
 
-## 🔌 REST API Endpunkte
+## REST API Endpunkte
 
-```mermaid
-graph TD
-    subgraph Tours [📦 /api/tours]
-        T1[GET /api/tours]
-        T2[POST /api/tours]
-        T3[PUT /api/tours/:id]
-        T4[DELETE /api/tours/:id]
-    end
-    subgraph Logs [📝 /api/tours/:id/logs]
-        L1[GET /api/tours/:id/logs]
-        L2[POST /api/tours/:id/logs]
-        L3[PUT /api/tours/:id/logs/:logId]
-        L4[DELETE /api/tours/:id/logs/:logId]
-    end
-```
+### Authentifizierung
+- `POST /api/auth/register` - Benutzer registrieren
+- `POST /api/auth/login` - Benutzer anmelden
 
----
+### Touren
+- `GET /api/tours` - Alle Touren abrufen
+- `POST /api/tours` - Neue Tour erstellen
+- `PUT /api/tours/{id}` - Tour aktualisieren
+- `DELETE /api/tours/{id}` - Tour loeschen
 
-## 🖥️ UI-Struktur
-
-```mermaid
-graph TD
-    App[🗺️ Tour Planner App]
-    App --> Header[Header]
-    App --> Layout[Main Layout]
-    Layout --> Left[Linkes Panel<br/>Tour-Liste]
-    Layout --> Right[Rechtes Panel]
-    Left --> TourList[Tour-Einträge]
-    Left --> AddTourBtn[➕ Add Tour Button]
-    Right --> NoTour[Kein Tour gewählt<br/>Leerzustand]
-    Right --> TourSelected[Tour ausgewählt]
-    TourSelected --> Details[Tour Details<br/>Bild · Felder · Karte]
-    TourSelected --> EditForm[Edit-Formular<br/>mit Validierung]
-    TourSelected --> LogList[Tour Logs]
-    LogList --> LogCard[TourLogCard-Komponente<br/>Anzeige + Bearbeitung]
-```
+### Tour Logs
+- `GET /api/tours/{id}/logs` - Alle Logs einer Tour
+- `POST /api/tours/{id}/logs` - Neues Log erstellen
+- `PUT /api/tour-logs/{logId}` - Log aktualisieren
+- `DELETE /api/tour-logs/{logId}` - Log loeschen
 
 ---
 
-## 🚀 Setup & Starten
+## Setup und Starten
 
-### Backend (Spring Boot)
+### Backend starten (Spring Boot)
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
 
-### Frontend (Angular)
-```bash
-cd frontend
-npm install
-ng serve
-```
-
-App läuft unter **http://localhost:4200**
-
-# Tour Planner (Intermediate Hand-In)
-
-Repository: https://github.com/cemesisk/Team9.git
-
-## Ziel dieser Version
-
-Diese Version ist bewusst auf den **Intermediate Hand-In** fokussiert:
-
-- Angular Frontend
-- MVVM-orientierte UI-Struktur
-- Integration mit Spring Boot Backend (HTTP/JSON)
-- CRUD fuer Tours
-- CRUD fuer Tour Logs
-- Login und Registrierung (JWT-basiert)
-- Reusable UI-Komponente fuer Tour-Logs
-- Eingabevalidierung in der UI
-- Responsive Layout
-- Map-Placeholder in den Tour-Details
-
-## Intermediate Checklist Mapping
-
-### Must Haves
-- Uses Angular as frontend framework -> **erfuellt**
-- Uses MVVM for UI -> **erfuellt**
-
-### GUI in general
-- Correct data binding between UI elements and view model properties -> **erfuellt**
-- UI responds to window size changes -> **erfuellt**
-- Defines reusable UI component -> **erfuellt**
-
-### Tours
-- Create/modify/delete tour -> **erfuellt**
-- Tours have required attributes (incl. image) and are managed in a list view -> **erfuellt**
-- Tour details show all tour attributes of a selected tour and a map-placeholder -> **erfuellt**
-- Validates user-input (no crash on wrong input) -> **erfuellt**
-
-### Tour Logs
-- Create/modify/delete tour log -> **erfuellt**
-- Tour log has required attributes -> **erfuellt**
-- Tour logs showing all logs of a selected tour with all attributes in a list view -> **erfuellt**
-- Validates user-input (no crash on wrong input) -> **erfuellt**
-
-### Protocol
-- Describes UX (include wireframes) -> **als separates Abgabe-Artefakt beilegen**
-
-## Projektstruktur
-
-- `frontend/` Angular App
-- `backend/` Spring Boot REST API
-
-## API (Intermediate)
-
-### Auth
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-
-### Tours
-- `GET /api/tours`
-- `POST /api/tours`
-- `PUT /api/tours/{id}`
-- `DELETE /api/tours/{id}`
-
-### Tour Logs
-- `POST /api/tours/{tourId}/logs`
-- `PUT /api/tour-logs/{logId}`
-- `DELETE /api/tour-logs/{logId}`
-
-## Starten
-
-### Backend
 Windows:
 ```bash
 cd backend
 mvnw.cmd spring-boot:run
 ```
 
-### Frontend
+### Frontend starten (Angular)
+```bash
+cd frontend
+npm install
+ng serve
+```
+
+oder
+
 ```bash
 cd frontend
 npm install
 npm start
 ```
 
-Frontend: `http://localhost:4200`
-Backend: `http://localhost:8080`
+Die Anwendung laeuft unter **http://localhost:4200**  
+Das Backend laeuft unter **http://localhost:8080**
 
-## Login/Register Flow
+---
 
-- Beim Start erscheint eine Login/Register-Ansicht im Frontend.
-- Nach erfolgreicher Authentifizierung wird ein JWT gespeichert und automatisch bei API-Requests mitgesendet.
-- Tour- und Tour-Log-Endpunkte unter `/api/**` sind geschuetzt, `/api/auth/**` ist frei.
+## Intermediate Hand-In Checkliste
+
+### Erfuellte Anforderungen
+
+**Must Haves**
+- Angular als Frontend Framework verwendet
+- MVVM Pattern fuer UI implementiert
+
+**GUI Allgemein**
+- Korrekte Datenbindung zwischen UI und View Model
+- UI reagiert auf Fenstergroesse (responsive)
+- Wiederverwendbare UI-Komponente definiert (TourLogCard)
+
+**Touren**
+- Erstellen, Bearbeiten, Loeschen von Touren
+- Touren haben alle erforderlichen Attribute inkl. Bild
+- Tour-Details zeigen alle Attribute und Karten-Platzhalter
+- Eingabevalidierung verhindert Absturz bei falscher Eingabe
+
+**Tour Logs**
+- Erstellen, Bearbeiten, Loeschen von Tour Logs
+- Logs haben alle erforderlichen Attribute
+- Logs werden in Listenansicht mit allen Attributen angezeigt
+- Eingabevalidierung implementiert
+
+**Authentifizierung**
+- Login und Registrierung mit JWT-Token
+- Geschuetzte API-Endpunkte unter /api/**
+- Oeffentliche Endpunkte unter /api/auth/**
+
+---
+
+## Projektstruktur
+
+```
+Team9/
+├── backend/                 # Spring Boot Anwendung
+│   └── src/main/java/at/fhtw/backend/
+│       ├── BackendApplication.java
+│       ├── config/
+│       │   └── CorsConfig.java
+│       ├── controller/
+│       │   ├── AuthController.java
+│       │   ├── TourController.java
+│       │   └── TourLogController.java
+│       ├── model/
+│       │   ├── Tour.java
+│       │   ├── TourLog.java
+│       │   └── User.java
+│       ├── dto/
+│       └── service/
+│           ├── TourService.java
+│           └── AuthService.java
+│
+└── frontend/                # Angular Anwendung
+    └── src/app/
+        ├── app.component.ts
+        ├── app.component.html
+        ├── tour.service.ts
+        ├── auth.service.ts
+        ├── models/
+        │   ├── tour.model.ts
+        │   ├── tour-log.model.ts
+        │   └── auth.model.ts
+        └── components/
+            └── tour-log-card/
+```
+
+---
 
 ## Hinweis
 
-Diese Readme beschreibt absichtlich nur den Intermediate-Scope.
+Dieses Repository wurde neu hochgeladen, nachdem es beim Branch-Wechsel versehentlich geloescht wurde.
+
+Dokumentation siehe DOCUMENTATION.md fuer detaillierte technische Informationen.
 
